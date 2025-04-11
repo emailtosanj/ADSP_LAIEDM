@@ -1,0 +1,30 @@
+
+# HTTPS
+# …or create a new repository on the command line
+echo "# ADSP_LAIEDM" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M development
+git remote add origin https://github.com/sanjaygverma/ADSP_LAIEDM.git
+git push -u origin development
+
+# …or push an existing repository from the command line
+git remote add origin https://github.com/sanjaygverma/ADSP_LAIEDM.git
+git branch -M development
+git push -u origin development
+
+# SSH
+# …or create a new repository on the command line
+echo "# ADSP_LAIEDM" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M development
+git remote add origin git@github.com:sanjaygverma/ADSP_LAIEDM.git
+git push -u origin development
+
+# …or push an existing repository from the command line
+git remote add origin git@github.com:sanjaygverma/ADSP_LAIEDM.git
+git branch -M development
+git push -u origin development
