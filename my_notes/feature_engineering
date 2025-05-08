@@ -1,0 +1,16 @@
+Feature engineering:
+
+Reference from : The must-know mathematics and statistics behind AI (pre-requisite mentored session)
+Author: Yogesh Singh (Yogi's Data Lab)
+
+It is a technique where in the data variables or labels are transformed from one form in to another form based on a certain logic.
+Need for doing feature engineering is for model to better get trained and predict / provide an output.
+
+Benefits
+
+1) Better generalization
+2) Improved model accuracy
+3) Enhanced Interpretability.
+
+Well explained
+Reference: https://www.youtube.com/watch?v=wV7Irl8iczo
