@@ -1,0 +1,32 @@
+WEEK 1 OVERVIEW
+In this week's module, we will dive into two fundamental libraries extensively employed in
+Data Manipulation: NumPy and Pandas. These libraries serve as fundamental building blocks for
+data manipulation, analysis, and processing tasks. We will also explore various visualization
+tools to enhance our data summary and visualization capabilities, with a focus on the widely
+used Python libraries, Matplotlib, Seaborn and Plotly.
+
+NumPy arrays and Functions
+#Why Numpy ? - numpy package/library addresses performance computational limitations which python lists could not.
+
+#version of python
+import sys
+print('python version', sys.version)
+#version of numpy
+print('numpy version',np.__version__)
+#python version 3.11.12 (main, Apr  9 2025, 08:55:54) [GCC 11.4.0]
+#numpy version 2.0.2
+
+Accessing and Modifying NumPy arrays
+Saving and Loading NumPy arrays
+Pandas Series (Creating, Accessing, and Modifying Series)
+Pandas DataFrames (Creating, Accessing, Modifying, and Combining DataFrames)
+Pandas Functions
+Saving and Loading datasets using Pandas
+Data Loading and Overview
+Histogram, Box Plot and Bar Plot
+Line Plot, and Scatter Plot
+Joint Plot, Violin Plot, and Strip Plot
+Swarm Plot, Cat Plot, and Pair Plot
+Heatmaps, and Customizing of Plots
+Plotly
+
