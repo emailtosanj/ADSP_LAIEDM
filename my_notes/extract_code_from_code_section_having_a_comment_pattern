@@ -1,0 +1,80 @@
+#Below code is NOT tested#
+
+## need to follow and check
+
+
+
+# Step 1: Export the notebook as a Python script
+# In Google Colab, you can do this manually: File -> Download -> Download .py
+
+# Alternatively, you can try to programmatically save the current notebook
+# However, directly saving the *current* notebook file to a specific location
+# from within the notebook code itself can be tricky due to Colab's environment.
+# The most reliable way is manual download or using the Colab API if you have
+# access to it (which is more complex).
+
+# For demonstration purposes, let's assume you have manually downloaded the
+# notebook as a .py file to a known path, e.g., 'MyNotebook.py' in your
+# Google Drive or current directory.
+# If your notebook is named 'MyNotebook.ipynb', download it as 'MyNotebook.py'
+# and make sure it's accessible. If using Google Drive, mount it first.
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Define the path to your downloaded Python script
+# Replace 'MyNotebook.py' with the actual name of your exported file
+# and adjust the path if it's in a specific folder within your Drive
+notebook_script_path = '/content/drive/MyDrive/Python Course/YourNotebookName.py' # <--- **CHANGE THIS TO YOUR EXPORTED .py FILE PATH**
+
+# Step 2: Parse the script to find lines with the specific comment within code cells
+
+def extract_code_with_comment(file_path, comment_marker="#comment"):
+    """
+    Reads a Python script exported from a Jupyter/Colab notebook and extracts
+    lines of code containing a specific comment marker within code cells.
+
+    Args:
+        file_path (str): The path to the exported Python script (.py).
+        comment_marker (str): The specific comment string to look for.
+
+    Returns:
+        list: A list of strings, where each string is a code line
+              containing the comment marker.
+    """
+    code_lines_with_comment = []
+    in_code_cell = False
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                # Colab/Jupyter .py export uses comments like '# %%' to denote cells
+                if line.strip() == '# %%':
+                    in_code_cell = True # Starting a new cell, assume it's a code cell initially
+                elif line.strip().startswith('# %% [markdown]'):
+                    in_code_cell = False # It's a markdown cell, skip lines until next cell marker
+                elif in_code_cell:
+                    # Check if the line contains the comment marker
+                    # We check if the marker is present and not just part of another word
+                    if comment_marker in line:
+                         # Optional: You might want to refine this check to ensure
+                         # it's a standalone comment or part of a comment block,
+                         # but a simple substring check is a good start.
+                         code_lines_with_comment.append(line.rstrip()) # Add the line, remove trailing whitespace
+
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return code_lines_with_comment
+
+# Run the function to get the code lines
+lines_found = extract_code_with_comment(notebook_script_path, comment_marker="#comment")
+
+# Print the extracted lines
+if lines_found:
+    print("Code lines found with '#comment':")
+    for line in lines_found:
+        print(line)
+else:
+    print("No code lines found with '#comment' in the specified file.")

@@ -15,13 +15,16 @@ print('python version', sys.version)
 print('numpy version',np.__version__)
 #python version 3.11.12 (main, Apr  9 2025, 08:55:54) [GCC 11.4.0]
 #numpy version 2.0.2
-
 Accessing and Modifying NumPy arrays
 Saving and Loading NumPy arrays
+
+#pandas -- 2.2.2
 Pandas Series (Creating, Accessing, and Modifying Series)
 Pandas DataFrames (Creating, Accessing, Modifying, and Combining DataFrames)
 Pandas Functions
 Saving and Loading datasets using Pandas
+
+
 Data Loading and Overview
 Histogram, Box Plot and Bar Plot
 Line Plot, and Scatter Plot
