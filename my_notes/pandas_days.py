@@ -1,20 +1,21 @@
-import pandas as pd
-
-series = pd.Series([420, 380, 390], index=['day1', 'day2', 'day3'])
-print(series[0])
-print(series[:'day3'])
-
-cal_data = pd.DataFrame({'day': ['day1', 'day2', 'day3', 'day4', 'day5'],
-                         'calories': [450, 300, 345, 520, 600],
-                         'duration_min': [30, 25, 29, 39, 48]})
-
-print(cal_data[:2])
-
-print(cal_data['calories'])
+# import pandas as pd
+#
+# series = pd.Series([420, 380, 390], index=['day1', 'day2', 'day3'])
+# print(series[0])
+# print(series[:'day3'])
+#
+# cal_data = pd.DataFrame({'day': ['day1', 'day2', 'day3', 'day4', 'day5'],
+#                          'calories': [450, 300, 345, 520, 600],
+#                          'duration_min': [30, 25, 29, 39, 48]})
+#
+# print(cal_data[:2])
+#
+# print(cal_data['calories'])
 
 # sanj - python notes
 
-# DataFrame loc method - label based retrieval
+# DataFrame loc method - Access a group of rows and columns by label(s) or a boolean array.
+
     #syntax df.loc(index, columns)
         #index - ':'
         #columns -  ['col1','col2', 'col3']
@@ -43,7 +44,7 @@ print(cal_data['calories'])
 # example
     # w = w[(w['total_bill'] >= 80) & (w['total_bill'] <= 100)]
 
-# DataFrame iloc method - index based retrieval
+# DataFrame iloc method - Purely integer-location based indexing for selection by position.
 # dataframe.iloc[row selection, column selection]
 
 # DataFrame
@@ -111,5 +112,19 @@ print(cal_data['calories'])
 # concat
 # join
 # merge
+
+#pandas DataFrame concat function
+# The concat() function (in the main pandas namespace) does all of the heavy liftings of performing
+# concatenation operations along an axis while performing optional set logic (union or intersection)
+# of the indexes (if any) on the other axes.
+#
+# Pandas provide a single function, merge() as the entry point for all standard database join operations
+# between dataframe objects.
+
+
+#Data Frame merge method
+
+#The merge() function of pandas is used to merge dataframes or named series objects with a
+#database-style join. A named series object is treated as a dataframe with a single named column.
 
 

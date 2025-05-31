@@ -393,7 +393,7 @@ store_data_new.reset_index()
 store_data_new.reset_index(drop=True,inplace=True)
 store_data_new
 
-"""### 2.8 Pandas - Combining DataFrames
+"""*italicized text*### 2.8 Pandas - Combining DataFrames
 
 We will examine 3 methods for combining dataframes
 

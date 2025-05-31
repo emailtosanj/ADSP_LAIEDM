@@ -13,6 +13,7 @@ import sys
 print('python version', sys.version)
 #version of numpy
 print('numpy version',np.__version__)
+
 #python version 3.11.12 (main, Apr  9 2025, 08:55:54) [GCC 11.4.0]
 #numpy version 2.0.2
 Accessing and Modifying NumPy arrays
@@ -24,6 +25,8 @@ Pandas DataFrames (Creating, Accessing, Modifying, and Combining DataFrames)
 Pandas Functions
 Saving and Loading datasets using Pandas
 
+matplotlib version -- 3.10.0
+seaborn version -- 0.13.2
 
 Data Loading and Overview
 Histogram, Box Plot and Bar Plot
