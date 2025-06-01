@@ -172,7 +172,7 @@ sns.boxplot(data=df, x='horsepower',color='green');
 """
 
 from IPython.display import Image
-Image('/content/drive/MyDrive/skew_box.png')
+Image(files_dir+'/Skewed_Box_Plot-1.png')
 #Image('/location on your computer/skew_box.png')
 
 """**For example,**"""
@@ -184,7 +184,7 @@ sns.boxplot(data=df, x='price');
 **Let's see how we can compare groups with boxplots.**
 """
 
-sns.boxplot(data=df, x='body_style', y='price') ;x
+sns.boxplot(data=df, x='body_style', y='price') ;
 
 """**Though boxplot visually summarizes variation in large datasets, it is unable to show multimodality and clusters.**"""
 
@@ -527,6 +527,8 @@ sns.catplot(data=df, x='fuel_type', y='horsepower');
 - A pointplot helps us to see how the main relationship is changing as a function of the second variable.
 """
 
+sns.catplot
+
 sns.catplot(data=df, x='body_style', y='horsepower', hue='fuel_type', kind='point');
 
 """**Catplot is very useful to draw categorical plots onto a FacetGrid by assigning a third variable to the *col* parameter.**"""
@@ -558,6 +560,8 @@ sns.pairplot(data=df[['normalized_losses','wheel_base','curb_weight','engine_siz
 sns.pairplot(data=df, vars=['wheel_base', 'curb_weight', 'engine_size', 'price'], hue='number_of_doors');
 
 """**We can set *corner=True* to plot only the lower triangle of a pairplot.**"""
+
+sns.pairplot
 
 sns.pairplot(data=df, vars=['wheel_base', 'curb_weight', 'engine_size', 'price'], corner=True);
 
