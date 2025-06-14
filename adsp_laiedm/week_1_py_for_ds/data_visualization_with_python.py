@@ -9,8 +9,11 @@ Original file is located at
 # Data Visualization with Python
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
+#from google.colab as cl
+#cl.__version__ -- 0.0.1a2 -- course date
+
+#from google.colab import drive
+#drive.mount('/content/drive')
 
 # Commented out IPython magic to ensure Python compatibility.
 # Libraries to help with reading and manipulating data
@@ -591,7 +594,7 @@ sns.heatmap(data=df[['wheel_base','curb_weight','engine_size','price']].corr(), 
 """
 
 # let's start by installing plotly
-!pip install plotly
+#!pip install plotly
 
 import plotly as pl
 print(pl.__version__)
