@@ -1,0 +1,2666 @@
+WEBVTT
+
+1
+00:01:26.740 --> 00:01:28.479
+Prof. John Tsitsiklis: Boarding in progress.
+
+2
+00:02:39.600 --> 00:02:41.780
+Prof. John Tsitsiklis: Okay, can you hear me?
+
+3
+00:03:06.290 --> 00:03:07.105
+Prof. John Tsitsiklis: Good.
+
+4
+00:04:00.990 --> 00:04:01.645
+Prof. John Tsitsiklis: good
+
+5
+00:06:18.200 --> 00:06:20.960
+Prof. John Tsitsiklis: Mitochis, police
+
+6
+00:08:11.800 --> 00:08:15.579
+Moderator - Ankit Agrawal: Hello! Good morning, Professor. Can we quickly do an audio check?
+
+7
+00:08:16.020 --> 00:08:17.130
+Prof. John Tsitsiklis: Yes.
+
+8
+00:08:19.620 --> 00:08:20.190
+Moderator - Ankit Agrawal: Alright!
+
+9
+00:08:20.190 --> 00:08:21.450
+Prof. John Tsitsiklis: Can you hear me?
+
+10
+00:08:21.920 --> 00:08:29.100
+Moderator - Ankit Agrawal: Yes, Professor, I can hear you, and I can see the lecture slides as well, so we'll get started.
+
+11
+00:08:29.578 --> 00:08:59.060
+Moderator - Ankit Agrawal: Hello, everyone good morning. Good afternoon. Good evening to everybody. Welcome back to the second week of the live lectures, if you remember, 2 weeks ago we had Professor Caroline, who discussed the topics of unsupervised learning with us and graph theory, and from this week on we will move, move, and start talking about supervised learning, and then professors will talk a little bit more about those topics in a few minutes
+
+12
+00:08:59.060 --> 00:09:02.509
+Moderator - Ankit Agrawal: a couple of reminders before we get started.
+
+13
+00:09:02.510 --> 00:09:23.229
+Moderator - Ankit Agrawal: I do see that the chat has been enabled. So please do not use the Q. And A. Box to ask your questions. Please ask your questions in the chat box. Make sure that your questions are being sent to everyone. I see a bunch of people still sending comments to host and panelists. Please change that setting to everyone.
+
+14
+00:09:23.230 --> 00:09:51.489
+Moderator - Ankit Agrawal: We are monitoring your questions, so I will try my best to answer questions in the chat, and if I do not, if if there are some questions that are left unanswered. Then that means that the questions will be answered in the upcoming lectures. And again, remember that we'll have 30 min at the end of this lecture for another Q. And a. With great learning mentors joining us and answering more questions towards the end as well. Okay.
+
+15
+00:09:51.490 --> 00:10:03.569
+Moderator - Ankit Agrawal: so with that being said. I'd like to welcome Professor John for this this week's set of lectures. As I mentioned, he will be talking about supervised learning primarily
+
+16
+00:10:04.037 --> 00:10:16.652
+Moderator - Ankit Agrawal: in in this week's set of lectures. Professor John received his bachelor's in mathematics, and then bachelor's master's and Phd. In electrical engineering, all from Mit.
+
+17
+00:10:17.480 --> 00:10:37.729
+Moderator - Ankit Agrawal: he has served as a co-director, co-associate director, and finally the director of laboratory for information and decision systems. He also served as co-director of operation Research center, and he is also a member of national Council on research and technology in Greece and associated sectoral research of informatics.
+
+18
+00:10:37.730 --> 00:10:58.680
+Moderator - Ankit Agrawal: His research interests are in the fields of systems, optimization control and operations research. Professor John has been co-author in several books, including parallel and distributed computation, numerical methods, neurodynamic programming introduction to linear optimization and introduction to probability.
+
+19
+00:10:58.680 --> 00:11:11.540
+Moderator - Ankit Agrawal: He is also a co-inventor in 7 different Us. Patents. So, Professor, I'm very excited to have you for the lectures this week, and I'll hand over the session to you.
+
+20
+00:11:13.040 --> 00:11:38.650
+Prof. John Tsitsiklis: Thank you. Ankit, for the kind introduction. Good day, everyone, so I'll have the pleasure of running this week's sessions. It's a subject that I love. I took probability and statistics a long time ago last century, in my freshman year, and ever since I've loved the subject, but more importantly, I've seen it evolve into something really major and big.
+
+21
+00:11:38.650 --> 00:11:49.420
+Prof. John Tsitsiklis: So the topics that we're discussing in this class, as you all know by now, they're the foundation of machine learning and data science. And so much of today's technology
+
+22
+00:11:49.420 --> 00:12:14.360
+Prof. John Tsitsiklis: revolves around methods like the ones we're covering in this course. So the subject I find it that it's both useful. But it's also a lot of fun. There's lots of interesting concepts. So as a quick overview of what's going to happen this week, we're going to talk about central methods in machine learning, but restricted to so-called supervised learning
+
+23
+00:12:14.550 --> 00:12:37.979
+Prof. John Tsitsiklis: in supervised learning. We're learning from examples from labeled examples. What does that mean. So we have a bunch of objects or individuals, and each object of or individual has a certain feature. X. These are the characteristics of the individual, but they also have a certain label Y,
+
+24
+00:12:39.530 --> 00:13:08.209
+Prof. John Tsitsiklis: and we're given lots of examples. And for each example we're told both the value of the feature and the value of the label. So the examples are labeled, and then a new person or object comes in. We only know the feature of that object, and then we're trying to predict the associated value of Y for that object. We're trying to predict or figure out or estimate
+
+25
+00:13:08.210 --> 00:13:18.690
+Prof. John Tsitsiklis: the label of that person. So examples are labeled, and then new test cases come in which are unlabeled. And we're trying to predict the label.
+
+26
+00:13:18.800 --> 00:13:42.249
+Prof. John Tsitsiklis: So one method for doing that is to try to draw a line through the data like I have drawn here this purple line. And when we do that, we say that we're doing linear regression, linear regression is the simplest thing that you can do. You can also try to draw nonlinear curves through the data, and that would be nonlinear regression. We're going to get there.
+
+27
+00:13:42.250 --> 00:13:51.700
+Prof. John Tsitsiklis: But first, st in this, especially today, we're going to focus on the linear case. Then there's another type of
+
+28
+00:13:52.120 --> 00:14:17.440
+Prof. John Tsitsiklis: of supervised learning problems that go under the name of classification. Here's a picture of what might be going on. We have again individuals. In this case each individual has 2 features. So 1st feature x, 1 and second feature X, 2. So a typical individual has a feature vector which is a point somewhere in this diagram.
+
+29
+00:14:17.440 --> 00:14:24.349
+Prof. John Tsitsiklis: And now individuals also have some associated colors. In this case the color is the label.
+
+30
+00:14:24.350 --> 00:14:49.339
+Prof. John Tsitsiklis: and in contrast to the 1st case where the label was taking values over the real line. In this case the label only takes one of 2 possible values, blue or brown. And then the classification problem is the following, when a new individual comes in to try to predict the color of that individual. And this is done typically by using a classifier.
+
+31
+00:14:49.340 --> 00:15:04.549
+Prof. John Tsitsiklis: So an example of a classifier could be a line like this that separates the space, and whenever somebody shows up on that side, we're going to say that we think it's a blue object, and if it comes on the other side of that line.
+
+32
+00:15:04.660 --> 00:15:27.760
+Prof. John Tsitsiklis: we think that's a brown object. So that's pretty much our topic. And the topic is how to build those lines like the purple line that we have here, or how to build that red line that gives for us a classifier. So that's a very high level overview of what we're trying to do, find the method by using the examples that are available to us
+
+33
+00:15:27.760 --> 00:15:35.040
+Prof. John Tsitsiklis: to make guesses so that we can classify or predict when new individuals are coming in.
+
+34
+00:15:35.350 --> 00:15:49.530
+Prof. John Tsitsiklis: Okay, up to here, pretty much. Any high school student can do that easily these days. You take your data, you Google or call Chatgbt, put your data in and you're going to get answers.
+
+35
+00:15:49.530 --> 00:15:50.800
+Faculty (Olympus): Gb dean.
+
+36
+00:15:52.390 --> 00:15:56.690
+Prof. John Tsitsiklis: There's some echo. Somebody should be muted.
+
+37
+00:16:03.200 --> 00:16:06.066
+Prof. John Tsitsiklis: Let's see, is it okay?
+
+38
+00:16:07.020 --> 00:16:33.339
+Prof. John Tsitsiklis: Problem solved? All right. So what distinguishes the professionals who know what they're doing as opposed to the high school students is that the professionals can also say how good is the method that I'm using the model that I get? Do I trust it? The predictions that I get do I trust them? And in order to answer questions of this type, one needs to do
+
+39
+00:16:33.340 --> 00:16:47.309
+Prof. John Tsitsiklis: the so-called performance assessment, which involves ideas like testing and validation, and so on. So we're going to be spending quite a bit of time on these topics as well throughout this week.
+
+40
+00:16:47.340 --> 00:17:06.440
+Prof. John Tsitsiklis: Now let's 0 down on today's agenda. We're going to introduce the regression problem. Say very few words about how it's being solved. But rather, we're going to spend more time about interpretations of what is going on, and then move on to a little bit of the subject of performance assessment.
+
+41
+00:17:06.440 --> 00:17:20.640
+Prof. John Tsitsiklis: And there's going to be plenty of stuff that we're going to leave for Wednesday. Further topics on regression, including what can go wrong? How can we go from linear to nonlinear issues like overfitting and regularization, and so on.
+
+42
+00:17:21.290 --> 00:17:47.649
+Prof. John Tsitsiklis: All right. So let me say a few words about how we're going to be running the session. I will be also monitoring the chat as we speak, so Ankit will be answering some questions in real time. I may answer also a few in real time, but mostly about questions that have to do with something very specific about what I'm talking right at this moment. So if somebody asks, How exactly. Did you define that symbol?
+
+43
+00:17:47.650 --> 00:18:12.630
+Prof. John Tsitsiklis: I'm going to answer on the spot more substantive questions or more philosophical questions. We're going to leave them for Mini breaks. We're going to have a few breaks while the session is while the session is running. Okay. So now let me get a little closer to our substance. Let me give you the big picture of what's happening in regression, but with a little
+
+44
+00:18:12.630 --> 00:18:17.989
+Prof. John Tsitsiklis: more of math symbols. So suppose that you're a doctor, and you're being trained.
+
+45
+00:18:18.350 --> 00:18:27.089
+Prof. John Tsitsiklis: So as a doctor, you see, patients and the typical patient has a record, a data record call it X,
+
+46
+00:18:27.090 --> 00:18:52.020
+Prof. John Tsitsiklis: that contains everything there is to know about that patient, and on the basis of that you're trying to figure out the state of health of that patient. So Y, the label is the state of the health X are the objective data that were given about the patient. So what happens in medical school, in medical school? You see lots of examples.
+
+47
+00:18:52.020 --> 00:19:09.980
+Prof. John Tsitsiklis: patients. And your professor, your instructor, tells you so. This patient that you just saw the diagnosis is this, and for that patient the diagnosis is that so each patient is a row in this diagram, and for each patient you're told
+
+48
+00:19:09.980 --> 00:19:24.630
+Prof. John Tsitsiklis: what their record is, but also what happens about? Do they have a disease or not. And you see lots of such patients. So little. N, here is the number of examples, the number of patients that you have seen.
+
+49
+00:19:24.690 --> 00:19:28.100
+Prof. John Tsitsiklis: So that's your medical training.
+
+50
+00:19:28.380 --> 00:19:53.370
+Prof. John Tsitsiklis: and then you go out to real life, and in real life somebody shows up at the doctor's office. You look at their record, their medical record. And then you need to make a decision. You need to guess or predict or estimate what their label actually is. So you're trying to predict the label based on their record.
+
+51
+00:19:53.370 --> 00:20:04.419
+Prof. John Tsitsiklis: and you are helped in doing that by using the knowledge that you have acquired while looking at lots of previous past examples.
+
+52
+00:20:04.770 --> 00:20:17.680
+Prof. John Tsitsiklis: Now, this is why the label could be binary. Is the patient sick or not? This would be an example of a classification problem. We're trying to predict a binary value
+
+53
+00:20:18.740 --> 00:20:46.819
+Prof. John Tsitsiklis: alternatively. Y could be a continuous, a numerical, variable. For example, the life expectancy of a patient. You might want to estimate that in this case we're dealing with a regression problem. So in both cases, you're trying to predict the labels. But if the labels are discrete, we call that a classification problem. If the labels take a continuous range of values, then we call that a regression problem.
+
+54
+00:20:47.040 --> 00:21:07.650
+Prof. John Tsitsiklis: So we get started. We take our examples that we have. This is the database or the data records. We take them. We look at them. We do some processing. We do some calculations. We call that process, the training process, and at the end we come up with a predictor.
+
+55
+00:21:07.820 --> 00:21:11.340
+Prof. John Tsitsiklis: Now the predictor is some kind of box
+
+56
+00:21:11.520 --> 00:21:23.950
+Prof. John Tsitsiklis: that what does this box do? It's a box that it takes as input the record of a new person and then makes a prediction for that particular person.
+
+57
+00:21:24.130 --> 00:21:50.960
+Prof. John Tsitsiklis: Now, a predictor is usually a machine or a box that has a few knobs, and those knobs are the predictor parameters, and the job of the training is to figure out good values for those predictor parameters. So training is something like tuning the predictor. Once you do all your tuning, then you're ready to go, and the new person comes in and you make a prediction.
+
+58
+00:21:50.980 --> 00:22:06.220
+Prof. John Tsitsiklis: I'm answering a question. Could it also be multi-class classification instead of binary? Yes, in classification, typically you have to choose between one of a small number of possible labels. It doesn't have to be binary
+
+59
+00:22:06.780 --> 00:22:08.700
+Prof. John Tsitsiklis: back to our story.
+
+60
+00:22:08.820 --> 00:22:32.110
+Prof. John Tsitsiklis: So this is the usual workflow. However, in some application domains. You want to do a little more. You want to understand what's going on. You want to build, maybe a physical model or build a theory, or, if you're an economist, to build a narrative, to build a story, to understand the mechanism of what's going on
+
+61
+00:22:32.190 --> 00:22:46.420
+Prof. John Tsitsiklis: in this case, one may proceed in a sort of indirect way. You take your data and you try to create a mathematical model of the physics of the world.
+
+62
+00:22:46.530 --> 00:23:13.680
+Prof. John Tsitsiklis: Once you have understood the physics. Then you can do further math in order to create a good predictor and then use the predictor to make predictions. Okay, what would be a concrete example of this. Suppose that my job is to look at a basketball, the ball that's kind of starting to go, and you want to predict whether it's going to go through the hoop or not.
+
+63
+00:23:14.020 --> 00:23:32.480
+Prof. John Tsitsiklis: So you can create a machine learning application that just looks at a million of videos and somehow extrapolate from those and makes a decision. Is that ball going into the hoop, or is it not? That would be an example of the 1st workflow?
+
+64
+00:23:32.770 --> 00:23:33.450
+Prof. John Tsitsiklis: Yeah.
+
+65
+00:23:33.790 --> 00:23:50.170
+Prof. John Tsitsiklis: the second approach would be. You look at lots of videos, and you figure out Newton's equations. You figure out the physics. And once you know Newton's laws on how balls are supposed to move.
+
+66
+00:23:50.370 --> 00:24:17.549
+Prof. John Tsitsiklis: That would be your Newton's laws would be your mathematical model. Once you have Newton's laws in your hands, then it's relatively easy to make predictions about what the ball is going to do. So in one case, we just build a predictor that makes good predictions. We don't care about understanding what's happening. In the second case, we 1st understand the physics of the situation, or, to put it differently, if you're building.
+
+67
+00:24:17.620 --> 00:24:33.099
+Prof. John Tsitsiklis: you're building mouse traps, and you do that experimentally. Just try different mousetraps, and see which one works as opposed to studying the psychology of mice and using your understanding of mice to build a better mousetrap.
+
+68
+00:24:33.580 --> 00:24:57.899
+Prof. John Tsitsiklis: So whether one is going to go the 1st way, just build a predictor or to try to understand is typically dictated by the application at hand. Exactly. What are you trying to do? If you're a physicist trying to win a Nobel Prize, you will have to go the second way. If you're an advertiser that just wants to get advertisements and find the most effective ones, you could go the 1st way
+
+69
+00:24:58.120 --> 00:25:27.780
+Prof. John Tsitsiklis: now. But something to keep in mind is that whenever we do modeling, and we're going to be using the word model in many different ways. In this session, models are supposed to be some approximations of reality that help us think about reality. So they will always be wrong. A model never captures everything about reality, but sometimes models are useful, and that's why mathematical models also are useful.
+
+70
+00:25:27.780 --> 00:25:55.680
+Prof. John Tsitsiklis: So mathematical models, and we will be making some occasionally. Some assumptions throughout these lectures keep in mind that mathematical assumptions are always something to be taken with a grain of salt. So it goes in the form. Let's pretend that the world obeys these mathematical assumptions and see what happens, and then you just hope that your mathematical assumptions are not too far from truth.
+
+71
+00:25:56.220 --> 00:26:20.499
+Prof. John Tsitsiklis: Alright before continuing a little bit of a commentary about language. This is our standard notation that we're going to have. X will stand for the feature vector of a typical individual. And the feature vector has several so-called features, those features, features, is the words that one would use in AI. But in statistics
+
+72
+00:26:20.500 --> 00:26:28.200
+Prof. John Tsitsiklis: you might use different terms. Some common words are that these entries. Here are the covariates.
+
+73
+00:26:28.330 --> 00:26:53.239
+Prof. John Tsitsiklis: Sometimes they're called the independent variables, whereas Y, the thing that we're trying to predict it could be called the dependent variable. It is the target that we're trying to estimate or predict. It's also called the label. It's also called the response, depending on the context on or who your friends are different. Words would be used in
+
+74
+00:26:53.240 --> 00:27:00.260
+Prof. John Tsitsiklis: different settings. So just to finish with the preliminaries a little bit about our notation.
+
+75
+00:27:00.260 --> 00:27:12.650
+Prof. John Tsitsiklis: So whenever we stack a bunch of numbers. We form a vector out of those numbers to distinguish between numbers and vectors. I'm going to be using Boldface for vectors.
+
+76
+00:27:13.010 --> 00:27:34.780
+Prof. John Tsitsiklis: And then we're going to be using subscripts. And something to notice is that subscripts can have different meanings here. X is bold and the sub. So it means a vector a data record. And the subscript tells us that it's the second data record in our database, whereas here
+
+77
+00:27:35.180 --> 00:27:45.580
+Prof. John Tsitsiklis: X is not bold. So it stands for a number. So x 2 is a number. And that would stand for the second component of a vector X.
+
+78
+00:27:45.580 --> 00:28:10.549
+Prof. John Tsitsiklis: Now, we're not going to have too much math. But one piece of very convenient notation is the dot product or inner product between 2 vectors, we have a column vector Y, we take X, and we transpose it. That's what this T stands for. It means that you're transposing a vector so you get a row. Vector and when you multiply these 2, it's this
+
+79
+00:28:10.550 --> 00:28:25.700
+Prof. John Tsitsiklis: entry times that entry. It's this entry times that entry. 3rd entry times that 3rd entry. So you do this cross multiplication, and you get what we call the inner product or the dot product between 2 vectors.
+
+80
+00:28:26.330 --> 00:28:45.389
+Prof. John Tsitsiklis: Last piece of notation I want to introduce. Typically, if you want to estimate some quantity, the way to think is that there is a true value of that quantity that we don't know, and we're trying to estimate, and very often that gets denoted with a star.
+
+81
+00:28:45.550 --> 00:29:09.310
+Prof. John Tsitsiklis: and then we estimate the quantity we form an estimate or a prediction of that quantity. And we typically use a hat to indicate that something is an estimate. So Theta hat would be an estimate of Theta star in this context. Alright. So all the stuff that we're going to be doing this week.
+
+82
+00:29:09.310 --> 00:29:28.760
+Prof. John Tsitsiklis: Sometimes one can describe it by saying, we're doing statistics. Sometimes you can describe it by saying, we're doing machine learning. What's the difference between those terms. Okay, there are some sociological differences that have to do with. Where was every person educated or what they try to emphasize?
+
+83
+00:29:28.760 --> 00:29:44.430
+Prof. John Tsitsiklis: But these days both of those terms refer to one and the same thing. And that same thing is a better word would be data science. And it's the business, the art, the engineering of extracting information from data.
+
+84
+00:29:44.430 --> 00:30:07.919
+Prof. John Tsitsiklis: So you're given a bunch of data and you can do more mathematical, so-called statistical analysis. Or you can throw the stuff inside the computer that does fancy computations. And then you could say, I'm doing machine learning. But in all cases you're doing one and the same thing. And the core methods. The core methodology is common between the fields of
+
+85
+00:30:07.920 --> 00:30:32.369
+Prof. John Tsitsiklis: if there are different fields of statistics and machine learning, and the best people in this business actually would identify themselves as being somewhere in the middle. They would have a good grounding on classical statistical methodologies. But they're also proficient with using computer tools and doing heavy computations, which would be more the machine learning side.
+
+86
+00:30:32.520 --> 00:30:46.609
+Prof. John Tsitsiklis: Last general comment. Before we get to business, one needs to have a precise language when talking about such stuff. And the language of data, science is probability.
+
+87
+00:30:46.610 --> 00:31:11.580
+Prof. John Tsitsiklis: We're not going to be using much from probability. But there is a little bit of basic notation that will show up. So we can use notation like this. This would stand like for the probability that a certain random variable takes a value larger than 2 or random variables have expected values. That would be the notation for the expected value and the expected value. You think of it as the
+
+88
+00:31:11.580 --> 00:31:28.139
+Prof. John Tsitsiklis: average value of a random variable. If you were to draw lots and lots of samples of that random variable, and if that expected value takes a certain value. You can talk about the variance of that random, variable, and the variance stands for the following.
+
+89
+00:31:28.140 --> 00:31:49.339
+Prof. John Tsitsiklis: you take a random drawing of your random variable. See how close it is to the mean. Look at the squared difference, and you ask how large is the squared difference on the average, so that gives you a sense of the variation of how big is the range over which a random variable is running.
+
+90
+00:31:49.340 --> 00:32:06.429
+Prof. John Tsitsiklis: So that's most of the notation we are going to be using so covered lots of preliminaries. And finally, it's time to get into real business. So let's introduce the linear regression problem. And we're going to proceed by talking
+
+91
+00:32:06.800 --> 00:32:29.339
+Prof. John Tsitsiklis: at the same time, both in general, but also in terms of a specific example that we will be using to make concrete whatever we're doing so. This is an example that's taken from the advertising business. There's a company that sells stuff. It sells stuff in 200 different markets in each one of the markets. Let's say market number 2.
+
+92
+00:32:29.570 --> 00:32:37.620
+Prof. John Tsitsiklis: They spend some amount of money on radio advertisement, TV advertisement and newspaper advertisement.
+
+93
+00:32:38.000 --> 00:32:43.349
+Prof. John Tsitsiklis: And then in that market they get a certain amount of sales.
+
+94
+00:32:43.580 --> 00:33:08.000
+Prof. John Tsitsiklis: Okay, don't ask me what the units are in this table. I would say that advertisement runs into thousands of dollars, but sales might run into millions of dollars. So 9 million of sales for that particular amount of advertisement, we're going to use just this as a toy example. So it's not so much about
+
+95
+00:33:08.780 --> 00:33:35.780
+Prof. John Tsitsiklis: about trying to be too realistic or comment about that. We want to ask, to answer questions, to ask questions and then answer them like the following, if I give you this data for 200 markets, can you look at these data and figure out whether advertisement and sales have any relation? Is advertisement useful? Is it relevant? Is it a waste of money?
+
+96
+00:33:35.950 --> 00:33:51.879
+Prof. John Tsitsiklis: If the answer turns out to be yes? Can we then actually make some more concrete predictions. If I tell you that in a certain market, that's how much we're advertising. Can you estimate sales
+
+97
+00:33:52.140 --> 00:33:54.460
+Prof. John Tsitsiklis: accurately enough?
+
+98
+00:33:55.220 --> 00:34:21.509
+Prof. John Tsitsiklis: That's the question. We will be trying to answer. So, as I said, this is not meant to be a realistic example. What are some things that we are missing here? Well, I didn't tell you anything about time. Are these data about advertising and sales over a period of a week or over a period of a month? Let's say it's over a period of a month.
+
+99
+00:34:21.530 --> 00:34:26.879
+Prof. John Tsitsiklis: Well, in that case, if these are data for the month of February.
+
+100
+00:34:26.929 --> 00:34:51.870
+Prof. John Tsitsiklis: maybe you should also tell me about advertisement in the month of January. Maybe January advertisement has an effect on sales in February, so there would be a spillover from advertisement in one month to another. There could also be spillover in space. If you have 2 cities that are nearby, and I'm advertising in one city, maybe that has
+
+101
+00:34:51.870 --> 00:35:03.929
+Prof. John Tsitsiklis: an effect on sales in the nearby city, so there could be spillover effects that we're not trying to take into account in any way in this picture.
+
+102
+00:35:03.930 --> 00:35:32.390
+Prof. John Tsitsiklis: and you can think of many other ways. There's aspects of seasonality that show up in this business. So doing this experiment during the holiday season, you should get some answers on non holiday seasons you would get different answers, and should you try to combine the data from the 2 seasons. So if you were to do this exercise in real life as an employee of a real company.
+
+103
+00:35:32.470 --> 00:35:48.399
+Prof. John Tsitsiklis: you would do things that would be a lot more complicated than what we're doing here. On the other hand, our purpose is to just illustrate the key concepts. So take this example as a grain of salt, just as a way of illustrating the concepts.
+
+104
+00:35:48.580 --> 00:36:12.540
+Prof. John Tsitsiklis: Alright. So you're given these data, how do you proceed? A general rule is, whenever you're given data, try to understand a little bit about them before doing any computations, maybe just plot a few things and try to visualize. So here is a scatter plot that shows for the 200 different markets.
+
+105
+00:36:12.940 --> 00:36:20.839
+Prof. John Tsitsiklis: The relation between TV advertisements and sales. So for a typical city or market.
+
+106
+00:36:20.880 --> 00:36:48.159
+Prof. John Tsitsiklis: each.is one of the 200 markets. So this dot here tells us. This is how much we advertised on TV. And this is how much we sold. There's 200 points because we have 200 markets. So what we did. Here is we plotted just one feature versus the label, and we do that because it's hard to plot in higher dimensions. One can do plots of
+
+107
+00:36:48.160 --> 00:37:11.969
+Prof. John Tsitsiklis: one feature at a time, and we can repeat that and do it also for the other features. Now, here, I didn't do just a scatter plot. I also drew a line through the data. How did I draw that line? Well, that's exactly what linear regression does for us. And so the next thing is to discuss, how do we draw those lines
+
+108
+00:37:12.030 --> 00:37:31.900
+Prof. John Tsitsiklis: now by looking at those lines? And just by eyeballing these data, it's sort of clear that there's a positive relation between TV and sales. It's fairly clear that there's a positive relation between radio and sales regarding newspaper.
+
+109
+00:37:32.480 --> 00:37:59.640
+Prof. John Tsitsiklis: If you were just given the dots and not the line. It's not at all clear that there is any relation. As you increase newspaper advertisement, you get sales that are either high or low. We do not really see a trend, although the computer did give for us a line that's sloping upwards. So the computer seems to think that there is a positive relation between the 2,
+
+110
+00:38:01.100 --> 00:38:30.979
+Prof. John Tsitsiklis: changing the scales of X and y, does the line of regression change? Well, if you stretch the X-axis, the whole diagram gets stretched. So if I take this diagram and change the scales to that, the line itself will also get stretched. It's going to have a lower slope. So that's just a matter of changing the units that you are using.
+
+111
+00:38:31.110 --> 00:38:39.780
+Prof. John Tsitsiklis: You can run regression, no matter how you have scaled. You have scaled the diagram, and you're going to get consistent results.
+
+112
+00:38:40.690 --> 00:38:52.880
+Prof. John Tsitsiklis: Alright. Now, having used these diagrams as a teaser. So now we come to the question of how do we draw these lines, how does the linear regression methodology work?
+
+113
+00:38:53.540 --> 00:39:07.730
+Prof. John Tsitsiklis: Here's what's going to happen. We're given these examples. Let me tell you the story for the special case where the features are one dimensional, only one feature. By that I mean that this, vector
+
+114
+00:39:08.430 --> 00:39:35.590
+Prof. John Tsitsiklis: the record of a typical data record of an individual consists of just a single number, just a single x. So this case is easier to visualize and easier to understand, and helps us to get started. So here's a plot of the training data that we have for each individual. We have a 1 dimensional feature, which is the X, and we have a label.
+
+115
+00:39:36.210 --> 00:39:49.189
+Prof. John Tsitsiklis: And what we want to do is to draw a line over over these data. Of course we have many choices of lines. The question is, what is the best line that we can choose.
+
+116
+00:39:49.440 --> 00:39:50.510
+Prof. John Tsitsiklis: Okay.
+
+117
+00:39:50.690 --> 00:40:06.379
+Prof. John Tsitsiklis: how are we going to be using that line? That line is going to be used to make predictions, that is, if a new person comes in and they have a certain value. I look at the corresponding height.
+
+118
+00:40:06.540 --> 00:40:32.239
+Prof. John Tsitsiklis: at the line, and that's going to be my predicted label for that individual. So I use the line to make predictions. How do I describe the line? Mathematically? Well, a line as a function of a single variable is described by a mathematical relation of this form. Here, Theta. Naught is the intercept.
+
+119
+00:40:32.250 --> 00:40:39.900
+Prof. John Tsitsiklis: It's the value of the line. When X is equal to 0 when X is equal to 0. We just get theta naught.
+
+120
+00:40:39.930 --> 00:40:42.680
+Prof. John Tsitsiklis: And then, as X changes.
+
+121
+00:40:43.600 --> 00:40:51.839
+Prof. John Tsitsiklis: y hat goes up and it goes up at a rate of theta one, so Theta one is the slope of the line.
+
+122
+00:40:52.250 --> 00:41:04.600
+Prof. John Tsitsiklis: So a typical line is described by 2 parameters, Theta naught, and theta one we want to choose a line. That's the same as saying, I want to choose theta 0 and theta one.
+
+123
+00:41:06.050 --> 00:41:21.139
+Prof. John Tsitsiklis: Okay. Now, for a typical individual in our data set, a typical individual has a feature. Xi. For that individual there is a true value.
+
+124
+00:41:22.730 --> 00:41:29.690
+Prof. John Tsitsiklis: That's the yi of that individual. And there's a predicted value for that individual.
+
+125
+00:41:30.460 --> 00:41:50.659
+Prof. John Tsitsiklis: Okay, the line is used to make predictions, but the database also tells us the actual label of that individual, and the prediction is not the same as the actual value, and the difference between these 2 we call it the residual.
+
+126
+00:41:50.730 --> 00:42:05.840
+Prof. John Tsitsiklis: So pictorially the residual is the height of this blue segment that I have here, and it tells us how wrong is the line regarding that particular individual.
+
+127
+00:42:06.250 --> 00:42:17.889
+Prof. John Tsitsiklis: And now the regression, methodology, or the so-called ordinary, least squares methodology does the following, let me choose a line
+
+128
+00:42:18.340 --> 00:42:19.850
+Prof. John Tsitsiklis: for which
+
+129
+00:42:20.040 --> 00:42:48.260
+Prof. John Tsitsiklis: the sum of the squared residuals is as small as possible. So when I draw a line, I look at all the residuals, and I look at the sum of the squares of those residuals, and then I try to find the particular line for which this sum of squares is as small as possible. That's what linear regression is in mathematical terms. We do the following for every individual.
+
+130
+00:42:48.470 --> 00:42:50.799
+Prof. John Tsitsiklis: This is the predicted value
+
+131
+00:42:50.940 --> 00:43:13.449
+Prof. John Tsitsiklis: that's for every individual in our training set. This is the predicted value. This is the actual value, the actual label of that individual. I look at that difference. This is the residual. I take the square of that residual, so that both positive residuals and negative residuals will be penalized.
+
+132
+00:43:13.590 --> 00:43:15.780
+Prof. John Tsitsiklis: and then I take the
+
+133
+00:43:16.020 --> 00:43:28.020
+Prof. John Tsitsiklis: sum of that quantity over all the individuals in our training set. So this sum is a sum over the individuals in our training set.
+
+134
+00:43:28.200 --> 00:43:44.380
+Prof. John Tsitsiklis: So this is the sum of the squared residuals associated with a particular choice of theta 0 and theta one. And then I'm going to use theta 0 and theta one, so that this sum is as small as possible.
+
+135
+00:43:44.380 --> 00:44:08.880
+Prof. John Tsitsiklis: That's what simple linear regression is for the case where we have just one feature, for example, this X here could stand just for TV advertisement. And we're running a regression of TV advertisement versus sales. Now that we have those pictures in front of us, we can move to the general case, so-called multiple linear regression.
+
+136
+00:44:08.880 --> 00:44:17.800
+Prof. John Tsitsiklis: In which case we have multiple features. This is the full problem. So in this case, if it was the radio problem.
+
+137
+00:44:17.800 --> 00:44:33.739
+Prof. John Tsitsiklis: This X, now in bold, would stand for a triple of X TV X radio and X newspaper. So we take all the features into account. And we want to predict wise from those features.
+
+138
+00:44:36.180 --> 00:44:44.110
+Prof. John Tsitsiklis: Okay, so what is going to be the same? What is going to be different in in this case?
+
+139
+00:44:45.480 --> 00:45:00.210
+Prof. John Tsitsiklis: So one thing is that we cannot quite visualize the same way. In this case the X's have one feature, we have another feature. Y is a function of these 2. If you try to visualize.
+
+140
+00:45:00.500 --> 00:45:05.269
+Prof. John Tsitsiklis: you're going to get a plane that's sitting on top
+
+141
+00:45:05.460 --> 00:45:19.529
+Prof. John Tsitsiklis: x 1 x 2 are on a plane, and then you have another hyperplane, and you make predictions by going vertically from the X plane until you hit that hyperplane up there. So
+
+142
+00:45:19.600 --> 00:45:48.750
+Prof. John Tsitsiklis: that would be sort of the picture in this particular case. All right. But we're going to still be using linear predictors linear in the sense that we're going to be making a prediction by forming a linear combination of the features. That's what we had in the case of a single feature. But now we continue with all the other features. We take each one of the features, we weigh it
+
+143
+00:45:49.030 --> 00:45:51.640
+Prof. John Tsitsiklis: with some weight, theta.
+
+144
+00:45:51.790 --> 00:46:03.510
+Prof. John Tsitsiklis: and then take the combination of all those quantities to form a prediction. So that's what a linear predictor is going to be.
+
+145
+00:46:03.670 --> 00:46:15.899
+Prof. John Tsitsiklis: We want to choose a good linear predictor. What does that mean? We want to choose the values of the thetas, so that the predictions are as good as possible.
+
+146
+00:46:16.720 --> 00:46:32.530
+Prof. John Tsitsiklis: So we're trying to tune the vector of parameters. But in this case, now, we have more parameters to tune. And for a shorthand notation, let's use a bold face, theta to stand for the entire vector of parameters.
+
+147
+00:46:33.430 --> 00:46:53.780
+Prof. John Tsitsiklis: Okay, now, we're going to do a little bit of a notational trick. Okay, the method we want to use is the same as before. Ordinarily squares. We want to tune the parameters so that the sum of the squared residuals is as small as possible the sum of the prediction errors
+
+148
+00:46:55.400 --> 00:46:56.430
+Prof. John Tsitsiklis: now.
+
+149
+00:47:00.030 --> 00:47:04.449
+Prof. John Tsitsiklis: So we want to tune this free parameter. Theta.
+
+150
+00:47:04.620 --> 00:47:33.479
+Prof. John Tsitsiklis: Somebody is asking, Why don't I use Theta hat as my symbol? Well, think of Theta as a free parameter, and Theta hat will be the actual choice of the parameter. That, I think is the best one. So Theta has many candidate values, the one that I choose, and I think is the best one. That's the one I would be denoting as Theta hat.
+
+151
+00:47:33.600 --> 00:47:55.670
+Prof. John Tsitsiklis: So again, why do we change theta? Theta determines a line we want to play and consider many different lines and find the best. That's the same as playing and considering different thetas and trying to find the best line.
+
+152
+00:47:58.120 --> 00:48:01.839
+Prof. John Tsitsiklis: Okay, here now, a small notational trick.
+
+153
+00:48:02.240 --> 00:48:18.790
+Prof. John Tsitsiklis: The X vector, the vector of features initially consists of the features that we're starting with. But let me redefine my X vector by throwing in a 1st component, which is always equal to one.
+
+154
+00:48:19.120 --> 00:48:25.000
+Prof. John Tsitsiklis: Why is that useful? Because once I do this little bit of a trick.
+
+155
+00:48:25.120 --> 00:48:34.879
+Prof. John Tsitsiklis: then my estimate, we can write it in shorthand as this inner product.
+
+156
+00:48:35.690 --> 00:48:46.369
+Prof. John Tsitsiklis: so my estimate is theta naught times one that's theta naught plus theta one times x 1. All the way to Theta M.
+
+157
+00:48:47.930 --> 00:49:03.730
+Prof. John Tsitsiklis: Oops that should not be N. That should be an M. Sorry for the typo. So so we can have this shorthand notation for the estimate, adding this one, as the 1st component
+
+158
+00:49:04.520 --> 00:49:21.700
+Prof. John Tsitsiklis: is equivalent doing the following, we have our spreadsheet with the x's and y. What I'm doing is, I'm adding one column to my spreadsheet, and in that column all the entries are ones.
+
+159
+00:49:21.800 --> 00:49:28.470
+Prof. John Tsitsiklis: I just tag an extra column and make my spreadsheet have this additional column.
+
+160
+00:49:29.810 --> 00:49:38.109
+Prof. John Tsitsiklis: So this is what linear regression is going to be. In general.
+
+161
+00:49:38.660 --> 00:49:41.400
+Prof. John Tsitsiklis: we want to find a theta
+
+162
+00:49:41.760 --> 00:49:46.609
+Prof. John Tsitsiklis: for which the sum of the squared errors.
+
+163
+00:49:47.130 --> 00:50:09.710
+Prof. John Tsitsiklis: the sum of the squared residuals is as small as possible. I'm minimizing over Theta. And then I get what I think is the best theta, and that's something that you might want to denote as Theta hat. Theta hat is my estimate of theta. It's the best theta, I think, is possible.
+
+164
+00:50:09.710 --> 00:50:24.530
+Prof. John Tsitsiklis: So that's what linear regression is in general, how do we solve this minimization problem? We want to find the theta which minimizes this expression? Well, the X's and the y's are given.
+
+165
+00:50:25.040 --> 00:50:34.229
+Prof. John Tsitsiklis: So for the given X's and y's, this is just a function of theta, and we want to minimize the function of theta.
+
+166
+00:50:34.410 --> 00:51:03.280
+Prof. John Tsitsiklis: It turns out that there's a simple formula that does that for you. What is that formula? Well, this messy expression here stands for taking our spreadsheet and denoting the 1st part of our spreadsheet as this X symbol, and the second part of the spreadsheet is the column with the Y's. So you just take your spreadsheet of data and take one piece, call it a matrix.
+
+167
+00:51:03.280 --> 00:51:15.629
+Prof. John Tsitsiklis: And you have a vector and once you have that matrix and vector one does certain matrix vector operations and comes up with the estimated theta.
+
+168
+00:51:16.820 --> 00:51:36.260
+Prof. John Tsitsiklis: And there's a formula for that. Okay, now you look at that formula and you get a little dizzy. Personally, I do not remember that formula by heart, and I don't really care about it. What I care. The takeaway messages are the following, there exists a formula.
+
+169
+00:51:36.490 --> 00:51:59.119
+Prof. John Tsitsiklis: so there is a clean way of solving the problem. And that formula involves only linear algebraic operations. You take matrices, you multiply matrices, you invert matrices, you multiply with a vector so linear algebraic operations are stuff that's very easy for computers to do.
+
+170
+00:51:59.270 --> 00:52:07.529
+Prof. John Tsitsiklis: So your computer implements this formula. So you just hit the button you give to your computer, a spreadsheet. And you say, run
+
+171
+00:52:07.580 --> 00:52:32.520
+Prof. John Tsitsiklis: linear regression. And a second later or less than that, you get out a value for the estimated parameters. So the only thing to remember is that this can be done efficiently and quickly, because there is a linear algebraic formula that solves the linear regression problem for those who want to go just one step deeper. This function of theta is a quadratic function
+
+172
+00:52:32.520 --> 00:52:41.879
+Prof. John Tsitsiklis: of theta and minimizing quadratic functions is easy. You take the derivative, set it to 0. And you get a system of linear equations.
+
+173
+00:52:43.020 --> 00:52:47.450
+Prof. John Tsitsiklis: So going back to our example, we have our spreadsheet.
+
+174
+00:52:47.910 --> 00:52:59.390
+Prof. John Tsitsiklis: We tell our computer, it's this one line, python command, run linear regression on this spreadsheet, and we get out
+
+175
+00:52:59.440 --> 00:53:22.530
+Prof. John Tsitsiklis: the parameter estimates the best choices of parameters, the ones that minimize the sum of squares. Okay, what does that mean? You look at those numbers. It's hard to tell what that means. A better way is to write it as follows, those parameters give me a predictive model.
+
+176
+00:53:22.530 --> 00:53:30.150
+Prof. John Tsitsiklis: a predictive model of the sales that says that if you have certain values for advertisement.
+
+177
+00:53:30.150 --> 00:53:34.419
+Prof. John Tsitsiklis: this is what I would be predicting the sales to be
+
+178
+00:53:34.490 --> 00:53:57.890
+Prof. John Tsitsiklis: so. This predictive model, for example, it says that if I don't advertise at all, I expect to sell just 2.9 4. If I advertise more or some positive quantities, I'm going to get more sales. Well, with the exception of this funny thing here.
+
+179
+00:53:57.930 --> 00:54:10.479
+Prof. John Tsitsiklis: here's there's a negative sign, a minus sign. And so this predictive model seems to say that newspaper advertisement actually hurts your business.
+
+180
+00:54:11.000 --> 00:54:37.140
+Prof. John Tsitsiklis: That's something that one should start thinking about. Do you really trust that this number is negative? Or could that be just because our data are noisy and random stuff is happening that just by accident. We got this negative number. After all, this is a predictive model. Remember the big saying, every model is wrong.
+
+181
+00:54:37.280 --> 00:54:49.809
+Prof. John Tsitsiklis: so never take a model as being something that's 100% absolutely true. This is just an approximation of reality. And we built an approximation that happens to give a negative number.
+
+182
+00:54:50.120 --> 00:54:56.979
+Prof. John Tsitsiklis: Do we trust it or not. That's the type of question that we want to answer in the rest of today's session.
+
+183
+00:54:57.180 --> 00:55:12.359
+Prof. John Tsitsiklis: Now, we can also run linear regression. Only take newspaper by itself. And that's how this diagram was generated. When you use only newspaper. Somehow, we get a positive
+
+184
+00:55:13.350 --> 00:55:40.609
+Prof. John Tsitsiklis: coefficient that seems to be more substantially positive. So simple linear regression seems to indicate that newspaper does have an effect on sales. Multiple linear regression says that most likely newspaper is useless, and that raises questions. Now which one of the 2 models are we going to trust? Which conclusion do we think is true? And so on.
+
+185
+00:55:40.620 --> 00:55:57.090
+Prof. John Tsitsiklis: And that's what I was saying earlier. Any high school students can give the spreadsheet to the computer and get this model and get that model as well. But it takes a more mature person to start thinking what those results mean.
+
+186
+00:55:57.890 --> 00:56:09.360
+Prof. John Tsitsiklis: Someone is asking. Okay, I said, I would be answering real time questions that have to do, especially with notation. M will always stand for the number of features.
+
+187
+00:56:11.230 --> 00:56:29.020
+Prof. John Tsitsiklis: In this case we have 3 features, but there's only one. There's also one more coefficient, which is the theta 0. So there's a total of 4 coefficients to estimate. So you're estimating 4 coefficients using 200 data points.
+
+188
+00:56:30.050 --> 00:56:35.260
+Prof. John Tsitsiklis: The question for categorical features. Let's leave it for Wednesday.
+
+189
+00:56:36.880 --> 00:56:54.519
+Prof. John Tsitsiklis: Okay, so let's take a break at this point. I'll pass the button to Ankid to collect some questions from from the chat. We'll take 5 or 6 min of a break, and then we're going to continue.
+
+190
+00:56:56.305 --> 00:57:07.470
+Moderator - Ankit Agrawal: Professor, I think most of the questions have been answered. But we have one big one important question. Can we explain how
+
+191
+00:57:07.870 --> 00:57:15.290
+Moderator - Ankit Agrawal: Theta hat is different from the bold theta that you were using. So that's kind of like a notational question.
+
+192
+00:57:15.450 --> 00:57:24.929
+Prof. John Tsitsiklis: Yes. So the what is called, let's say, old Theta, the original theta is sort of a free parameter.
+
+193
+00:57:27.590 --> 00:57:31.720
+Prof. John Tsitsiklis: Theta hat is a specific choice
+
+194
+00:57:32.070 --> 00:57:47.750
+Prof. John Tsitsiklis: for the value of the parameter, which is meant to be sort of good. Let me make an analogy with more ordinary math. Suppose I give you a function which is X squared.
+
+195
+00:57:49.060 --> 00:57:52.230
+Prof. John Tsitsiklis: And that function has a certain plot.
+
+196
+00:57:53.040 --> 00:57:58.979
+Prof. John Tsitsiklis: And then I ask you to minimize that function over all. X's
+
+197
+00:57:59.280 --> 00:58:25.910
+Prof. John Tsitsiklis: okay. The minimum is, of course, 0, and that would be my X hat. 0 is my specific choice. It's the good choice. X is a free parameter that could be anything so X is like, or x, or theta is like the setting of a knob which could be anything. The hat indicates the specific setting of the knob that I chose.
+
+198
+00:58:30.768 --> 00:58:42.020
+Moderator - Ankit Agrawal: Another question we have is, could there be a carryover of TV or radio that is showing newspaper positive, like dependence between independent variables.
+
+199
+00:58:43.200 --> 00:58:47.459
+Prof. John Tsitsiklis: Yes, yeah. The oops.
+
+200
+00:58:48.060 --> 00:58:59.219
+Prof. John Tsitsiklis: Let's see. So yeah, when trying to understand the mystery of some, oh, wow.
+
+201
+00:58:59.840 --> 00:59:03.706
+Prof. John Tsitsiklis: don't, understand what's happening with my slides here.
+
+202
+00:59:08.370 --> 00:59:18.340
+Prof. John Tsitsiklis: yeah, one can spend quite a bit of time trying to figure out how to reconcile those results.
+
+203
+00:59:28.180 --> 00:59:35.290
+Prof. John Tsitsiklis: one explanation is the following newspaper advertisement tends to go up
+
+204
+00:59:35.470 --> 00:59:44.990
+Prof. John Tsitsiklis: when TV and radio go up, your advertisement department would probably move both simultaneously.
+
+205
+00:59:45.380 --> 00:59:50.400
+Prof. John Tsitsiklis: There's a positive correlation between sales and TV.
+
+206
+00:59:50.570 --> 01:00:02.310
+Prof. John Tsitsiklis: And because newspaper and TV are also positively correlated. That makes you think that there's a positive correlation between sales and newspaper.
+
+207
+01:00:03.000 --> 01:00:22.300
+Prof. John Tsitsiklis: That's the explanation. So maybe newspaper has no effect on sales. On the other hand, newspaper is positively correlated with TV and TV is positively correlated with sales that causes a positive correlation between newspaper and sales, and you think
+
+208
+01:00:22.940 --> 01:00:50.200
+Prof. John Tsitsiklis: that you have an effect of some sort. But maybe that effect doesn't really exist. Okay? And here I used 2 words correlation, and I also used the word effect. Sometimes the 2 go together, but as we will be discussing next time in more detail, there are different things. You could have a correlation, but no effect. And that's probably what's happening here.
+
+209
+01:00:50.200 --> 01:01:00.289
+Prof. John Tsitsiklis: There is a correlation between newspaper and sales, but probably newspaper doesn't affect the sales in a direct way.
+
+210
+01:01:00.410 --> 01:01:07.490
+Prof. John Tsitsiklis: More on that. A lot about interpretations is going to be our topic for Wednesday.
+
+211
+01:01:08.490 --> 01:01:31.044
+Moderator - Ankit Agrawal: Yeah. So I think that also kind of addresses the question from Kenny, do we consider the influence of the covariance matrix into the linear regression. So Kenny will address that question on Wednesday, a little bit more in detail when we talk about how covariance affects linear regression. And how do we find multiple linearity in our data?
+
+212
+01:01:31.520 --> 01:01:40.779
+Moderator - Ankit Agrawal: another question that I see is from Oscar. What happens when parts of our data throw off our prediction model way off.
+
+213
+01:01:40.990 --> 01:01:45.059
+Moderator - Ankit Agrawal: What's the next steps with the sample data.
+
+214
+01:01:47.050 --> 01:02:03.579
+Prof. John Tsitsiklis: Ok, so if some of our data are something like outliers, and they have a heavy effect on our choice of datas, that's a situation that we might not like we might not want to have.
+
+215
+01:02:03.580 --> 01:02:20.380
+Prof. John Tsitsiklis: And here's lots of things that happen in practice. One would be before you run your regression to look for outliers and throw them away. If you think that they're just flukes in other applications, the outliers actually tell you something important.
+
+216
+01:02:20.380 --> 01:02:48.100
+Prof. John Tsitsiklis: So you might want to keep them in. But maybe you don't want your results to be too sensitive to outliers. And there are methods again that so-called robust methods that tend to try to reduce the sensitivity of outliers. So that's an entire big subject, and it gets closer to the art rather than the foundations. And the math, which is what we're trying to
+
+217
+01:02:48.750 --> 01:02:50.600
+Prof. John Tsitsiklis: to cover today.
+
+218
+01:02:53.628 --> 01:03:03.470
+Moderator - Ankit Agrawal: Another question, I see. Can we test the weight of each m to know if really news is affecting the sales.
+
+219
+01:03:04.450 --> 01:03:21.049
+Prof. John Tsitsiklis: I think the question is, if we look at each one of those terms, can we test the weight associated with a particular feature, whether it's significant or not. We're going to discuss that in about an hour from now.
+
+220
+01:03:24.568 --> 01:03:41.140
+Moderator - Ankit Agrawal: One final question will take is from Sabina. Could you please explain the difference between linear regression and mean squared error in the readings, we were told, mean, squared error was the one that we need to minimize. But now I notice that linear regression is the one minimized.
+
+221
+01:03:41.140 --> 01:03:46.270
+Prof. John Tsitsiklis: No linear regression is the name for a methodology.
+
+222
+01:03:46.590 --> 01:03:51.880
+Prof. John Tsitsiklis: Okay, it's the methodology in which we minimize
+
+223
+01:03:52.040 --> 01:03:56.760
+Prof. John Tsitsiklis: mean squared error, which would be this thing.
+
+224
+01:03:57.020 --> 01:04:20.920
+Prof. John Tsitsiklis: but it's also the same as minimizing this one over. N, it's just a constant. So in the ordinary, least squares methodology, the way it was described in my slides. I just use this sum. But minimizing the sum is the same as minimizing the average squared error, which is the mean squared error. So it's the same thing.
+
+225
+01:04:23.412 --> 01:04:28.250
+Moderator - Ankit Agrawal: I think, Professor, we can continue with the lecture, and I'll keep collecting more questions.
+
+226
+01:04:28.250 --> 01:04:29.230
+Prof. John Tsitsiklis: Okay.
+
+227
+01:04:29.580 --> 01:04:38.729
+Prof. John Tsitsiklis: So now let's do a little bit of mind twisting that is trying to understand oops. What's that?
+
+228
+01:04:45.580 --> 01:04:49.730
+Prof. John Tsitsiklis: Let's try to understand what exactly. Did we do?
+
+229
+01:04:49.920 --> 01:04:52.000
+Prof. John Tsitsiklis: What exactly are we doing?
+
+230
+01:04:52.910 --> 01:05:19.940
+Prof. John Tsitsiklis: How is this methodology justified? I said, Okay, let's just minimize sum of squared errors. But where is that coming from? Is there a principled way of discussing it? So one particular way of thinking about linear regression is the following, there's a large population out there, and in that population every object has a certain X and has a certain y.
+
+231
+01:05:20.170 --> 01:05:25.579
+Prof. John Tsitsiklis: we think that there is a relation between X's and y's.
+
+232
+01:05:25.740 --> 01:05:30.430
+Prof. John Tsitsiklis: and maybe that relation is nonlinear.
+
+233
+01:05:31.120 --> 01:05:40.180
+Prof. John Tsitsiklis: We don't make any assumption about the physics being linear. It could be nonlinear. However, we want to use simple models.
+
+234
+01:05:40.450 --> 01:05:49.339
+Prof. John Tsitsiklis: and because of that we want to just build a linear model of that situation. We want to build a linear predictor.
+
+235
+01:05:49.480 --> 01:06:13.889
+Prof. John Tsitsiklis: And we want to build that linear predictor in the best possible way what does best possible best possible. Here's a reasonable definition of what best possible is find the predictor which is, find theta such that the average value of the squared prediction. Error is as small as possible.
+
+236
+01:06:14.010 --> 01:06:42.059
+Prof. John Tsitsiklis: Now, what does the word average mean? If you're talking about a big population, you can think of picking a person at random, and in that case the average is the same as the expected value. Expected. Value is the sort of mathematical way of describing the long, the average when you're picking at random out of a large, real, or imagined population out there.
+
+237
+01:06:42.110 --> 01:06:48.589
+Prof. John Tsitsiklis: So expectation stands really for the average over the entire population.
+
+238
+01:06:48.920 --> 01:06:50.859
+Prof. John Tsitsiklis: That's what we would like to do.
+
+239
+01:06:51.030 --> 01:07:06.739
+Prof. John Tsitsiklis: But in order to solve that problem, we would need to have access to the entire true population to find the best line for that population instead, what we have is only a finite number of examples.
+
+240
+01:07:08.060 --> 01:07:16.999
+Prof. John Tsitsiklis: So what can we do? Well, I will just minimize the sum of the squared errors on the examples that we have.
+
+241
+01:07:17.930 --> 01:07:27.100
+Prof. John Tsitsiklis: and then hope that the red line that I get here is close to the red line, which is the best one for the true population.
+
+242
+01:07:28.470 --> 01:07:36.180
+Prof. John Tsitsiklis: There is math that says that when N. Goes to infinity, when the number of examples goes to infinity
+
+243
+01:07:36.180 --> 01:08:01.089
+Prof. John Tsitsiklis: that the average over the finite population essentially becomes the same as the expected value that we had here, which is the average over the entire population. So the red line is going to recover the best out of the true population, but with an important caveat. As long as the samples that we have have been drawn represented
+
+244
+01:08:01.090 --> 01:08:04.030
+Prof. John Tsitsiklis: out of the true population.
+
+245
+01:08:04.060 --> 01:08:12.019
+Prof. John Tsitsiklis: So it's important that we sample representatively, if we were to sample individuals only from.
+
+246
+01:08:12.330 --> 01:08:40.200
+Prof. John Tsitsiklis: let's say this part of the diagram, I would get a line that might look very different in order to find a line that's good for the overall population. It's important that I sample correctly. Okay, that's a simple mathematical statement. On the other hand, in real life, in practice, it's not so easy. If you think of the work of pollsters
+
+247
+01:08:40.200 --> 01:08:44.060
+Prof. John Tsitsiklis: who tried to sample the population of
+
+248
+01:08:44.310 --> 01:09:08.380
+Prof. John Tsitsiklis: of voters in some election. It's not so easy to sample, so that every person has the same probability of being equally likely. There's lots of idiosyncratic effects there. And so it's a big art and a big business how to sample representatively. But this assumption is necessary for this storyline to go through.
+
+249
+01:09:08.890 --> 01:09:19.919
+Prof. John Tsitsiklis: If you sample representatively, then the line that you get from a small sample is going to approach the line. That is the ideal one on the true population.
+
+250
+01:09:20.090 --> 01:09:42.489
+Prof. John Tsitsiklis: But here's an interesting observation. If another statistician shows up tomorrow and gets another sample from the true population. Even if it is a representative sample. Still, it's going to be a different sample. It's going to be different data points. And the line that they're going to get is going to be a little different.
+
+251
+01:09:42.510 --> 01:09:55.370
+Prof. John Tsitsiklis: So there is randomness in which Theta hat do we choose? One statistician got a certain Theta hat. Another statistician got another Theta hat.
+
+252
+01:09:55.370 --> 01:10:14.720
+Prof. John Tsitsiklis: and which one you get has to do with the randomness in your sampling procedure. So a point that I'm trying to drive through. And we're going to be coming back to that. Is that because there is randomness in the data set that we get the estimates themselves that we get
+
+253
+01:10:14.720 --> 01:10:22.710
+Prof. John Tsitsiklis: have are essentially random quantities themselves. We have to treat them as random variables.
+
+254
+01:10:22.710 --> 01:10:32.420
+Prof. John Tsitsiklis: Alright. So this is one story, one justification for the least squares methodology, and it requires that samples are drawn representatively.
+
+255
+01:10:32.690 --> 01:10:34.910
+Prof. John Tsitsiklis: Now, here's another story
+
+256
+01:10:35.110 --> 01:10:51.190
+Prof. John Tsitsiklis: that's quite different. But it's going to lead to the same methodology in the end and goes under the name of maximum likelihood methodology. Let me illustrate this for the case where we just have a single feature. So we have a diagram like this.
+
+257
+01:10:52.070 --> 01:11:01.270
+Prof. John Tsitsiklis: let us make an assumption. This is a strong assumption, different from the previous slide, that the world is linear.
+
+258
+01:11:01.560 --> 01:11:10.320
+Prof. John Tsitsiklis: What does it mean that the world is linear that y's are related to X's through a linear relation.
+
+259
+01:11:10.450 --> 01:11:23.240
+Prof. John Tsitsiklis: There are some true parameters, Theta stars, and there is a linear relation, except that this linear relation is not exact. There's also some noise in it.
+
+260
+01:11:23.610 --> 01:11:29.340
+Prof. John Tsitsiklis: So we have a linear relation, but it's not perfect.
+
+261
+01:11:29.820 --> 01:11:55.609
+Prof. John Tsitsiklis: There is some extra noise. The actual yi differs from the true line by some amount, and that amount we can call it noise. We can call it an idiosyncratic aspect of a certain individual, or we could think of it as measurement noise. So what would be the measurement? Noise story? Suppose there's something that moves along a straight line?
+
+262
+01:11:55.610 --> 01:12:19.389
+Prof. John Tsitsiklis: We take measurements of that thing. But our measuring instrument is noisy. So the actual measurements that we get are those black dots as opposed to being the exact values, the geosyncratic noise story. What could it be? It could be that consumption of an individual is 0 point 7 times their income.
+
+263
+01:12:19.410 --> 01:12:42.850
+Prof. John Tsitsiklis: That's a type of model that an economist might write down. That could be true for the aggregate economy that on the aggregate people spend 70% of their income in consumption. But for any specific individual that's not going to be exactly true. Every specific individual has some idiosyncratic deviation from this equation.
+
+264
+01:12:42.850 --> 01:13:01.829
+Prof. John Tsitsiklis: So some people spend less or some people spend more than the 70%. And that's what this Wi is. So we're assuming that the world is linear. And let's make an even more special mathematical assumption that these W's can be either positive or negative. They're random.
+
+265
+01:13:01.830 --> 01:13:22.349
+Prof. John Tsitsiklis: but they obey a normal distribution. It's a 0 mean and has a certain variance. Sigma squared. That tells us how big those noises are going to be, and suppose that each individual is completely independent from any other individual. So the Wi's are normal random variables.
+
+266
+01:13:22.350 --> 01:13:37.149
+Prof. John Tsitsiklis: So this is a very specific, very concrete, mathematic model of the world that we live in. And there's some true parameters. The world is linear, and we're trying to recover those true parameters.
+
+267
+01:13:38.340 --> 01:14:01.959
+Prof. John Tsitsiklis: Okay? And we want now to tune our theta to try to find a good choice of the parameters. So the predictive model that we build is of this type. It's going to be a line like the blue line. The blue line is trying to guess the correct red line. Any particular blue line is going to have certain residuals.
+
+268
+01:14:04.030 --> 01:14:10.119
+Prof. John Tsitsiklis: and we want. And now we ask the following type of question
+
+269
+01:14:11.930 --> 01:14:21.950
+Prof. John Tsitsiklis: for any given line. We get certain residuals, and we look at those values. And we think, oh, no, those values of the residuals look too big.
+
+270
+01:14:22.060 --> 01:14:26.569
+Prof. John Tsitsiklis: 2 big mistakes. I don't like them. They look pretty unlikely
+
+271
+01:14:27.140 --> 01:14:51.180
+Prof. John Tsitsiklis: for another line. You could say, oh, those residuals are nice and small, so these would be likely remember that we're making a normal assumption about the residuals. If for a certain Theta, I see residuals that are out there, I would say these residuals would be very unlikely to have occurred. So this particular Theta doesn't look plausible.
+
+272
+01:14:52.260 --> 01:15:02.370
+Prof. John Tsitsiklis: This type of reasoning is the maximum likelihood method in statistics which chooses theta
+
+273
+01:15:02.690 --> 01:15:07.539
+Prof. John Tsitsiklis: chooses a model, the parameters under which
+
+274
+01:15:07.790 --> 01:15:14.190
+Prof. John Tsitsiklis: the residuals that we get are likely to occur.
+
+275
+01:15:14.790 --> 01:15:17.970
+Prof. John Tsitsiklis: And if this was the true model.
+
+276
+01:15:18.520 --> 01:15:28.200
+Prof. John Tsitsiklis: so it's a bit of a mind twister. It's hard to explain in few words, but let me give it a shot once more.
+
+277
+01:15:28.660 --> 01:15:34.589
+Prof. John Tsitsiklis: We have the true model that we do not know, and we have a candidate model
+
+278
+01:15:34.730 --> 01:15:37.889
+Prof. John Tsitsiklis: that gives certain residuals.
+
+279
+01:15:38.750 --> 01:15:43.450
+Prof. John Tsitsiklis: Let's think of this probability here that's called the likelihood.
+
+280
+01:15:44.240 --> 01:15:45.900
+Prof. John Tsitsiklis: What's that probability?
+
+281
+01:15:46.720 --> 01:15:50.569
+Prof. John Tsitsiklis: If Theta was the true one.
+
+282
+01:15:50.910 --> 01:15:56.299
+Prof. John Tsitsiklis: In that case these residuals would be the same as the
+
+283
+01:15:56.500 --> 01:16:10.269
+Prof. John Tsitsiklis: idiosyncratic noises, and so they would have a certain normal distribution, and under that normal distribution, there would be a certain probability that these residuals would be observed
+
+284
+01:16:10.980 --> 01:16:13.610
+Prof. John Tsitsiklis: for any theta.
+
+285
+01:16:14.560 --> 01:16:29.469
+Prof. John Tsitsiklis: We get a likelihood for the residuals that we have observed for some thetas. The observed residuals take very unlikely values for certain Thetas. Those residuals take likely values.
+
+286
+01:16:30.850 --> 01:16:57.269
+Prof. John Tsitsiklis: And then what we do is we just find the theta for which this likelihood is as big as possible. At this point we use the assumption that the W's are independent and normal, so as to write down an explicit formula for the likelihood function. And once you write that explicit formula, it turns out that the maximum likelihood methodology
+
+287
+01:16:57.420 --> 01:16:58.520
+Prof. John Tsitsiklis: is
+
+288
+01:16:58.740 --> 01:17:23.210
+Prof. John Tsitsiklis: gives you the same results, the same estimates as in the ordinary least squares methodology that we had before. The math is for you to look at your own time. I'm not going to discuss the math part of these slides. So this is an alternative interpretation and justification of ordinary, least squares
+
+289
+01:17:23.230 --> 01:17:29.800
+Prof. John Tsitsiklis: that is ordinary. Least squares is the method that comes out. If you
+
+290
+01:17:29.840 --> 01:17:40.279
+Prof. John Tsitsiklis: assume that the world is linear, and you choose your estimates by maximizing the likelihood of what was actually observed.
+
+291
+01:17:42.770 --> 01:18:00.250
+Prof. John Tsitsiklis: The 2 stories that I have given that give rise to the same ordinary, least squares method are actually very different in terms of interpretation. In one interpretation we have a population or distribution.
+
+292
+01:18:00.390 --> 01:18:14.340
+Prof. John Tsitsiklis: We assume that data are sampled out of that population, and we just try to build a good predictor. So we only really care about the Y hats being good.
+
+293
+01:18:14.870 --> 01:18:22.540
+Prof. John Tsitsiklis: In the second story we make an assumption that the world is linear. That's a very strong assumption.
+
+294
+01:18:22.660 --> 01:18:52.199
+Prof. John Tsitsiklis: On the other hand, the X's are not drawn at random. The X's could be anything. Maybe you get to set the X's. The features, you create the features, and you see what are the corresponding y's, there's no sampling from the population. The X's are somehow set, and the y's are observed. So it's a very different situation, and in that situation. We are assuming that there are
+
+295
+01:18:52.200 --> 01:19:03.719
+Prof. John Tsitsiklis: true parameters. The world is linear with some Theta star, and we try and we create estimates. Theta hats that aim to estimate those particular Theta stars.
+
+296
+01:19:05.320 --> 01:19:23.679
+Prof. John Tsitsiklis: So same formulas. Theta hat is going to be estimated in exactly the same way, but the story and the interpretation is different and depending on the context or the application. One story is more applicable compared to the other.
+
+297
+01:19:24.610 --> 01:19:47.170
+Prof. John Tsitsiklis: Alright. At this point I would like to take a 3 min. Break not for questions, but rather for just taking a small breath. We can all just relax and breathe slowly while contemplating something relaxing, and I'll be with you in about 2 min.
+
+298
+01:20:59.800 --> 01:21:01.745
+Prof. John Tsitsiklis: Alright!
+
+299
+01:21:08.790 --> 01:21:23.649
+Prof. John Tsitsiklis: Let me just answer one question. The last question in the chat is, What is an example where the phenomenon is nonlinear. Just keep it very simple. I have a ball and I throw it, and it's going down.
+
+300
+01:21:23.770 --> 01:21:28.340
+Prof. John Tsitsiklis: Okay. The ball, the height of the ball
+
+301
+01:21:29.860 --> 01:21:36.619
+Prof. John Tsitsiklis: as time goes on. You probably all know, like high school, that it's a quadratic curve.
+
+302
+01:21:38.350 --> 01:21:58.410
+Prof. John Tsitsiklis: So that's a case where the relation think of T as the feature. Think of Y as the quantity we want to predict. And maybe you got some data, some observations as the ball was going down. But the data are noisy, and you want to fit a model.
+
+303
+01:21:58.660 --> 01:22:17.069
+Prof. John Tsitsiklis: Linear regression would say, let me pretend that this is a linear relation, and let me fit a line through those data. Of course, in this particular example it would be a pretty bad idea to try to fit a line, but that's essentially the
+
+304
+01:22:18.670 --> 01:22:41.800
+Prof. John Tsitsiklis: one sort of situation where this story goes through there's a phenomenon which is truly nonlinear, but because of our ignorance or because of our laziness, we try to fit a linear model in the real world. There's plenty of situations where things are nonlinear. I mean, things tend to be linear
+
+305
+01:22:41.970 --> 01:23:09.350
+Prof. John Tsitsiklis: in a small range, but any phenomenon that you look at over a broad range, it will have to be nonlinear, I mean, even in advertising and sales. Suppose that advertising really drives sales. Okay. But if I advertise 1 billion dollars, do you think that sales will keep going up? No, there is at some point at which the market saturates.
+
+306
+01:23:09.560 --> 01:23:29.300
+Prof. John Tsitsiklis: So even for advertisement and sales, it's probably a relation like this which is the true one. If you think that you're operating in this region, then linear regression would be good. If you're trying to build a much more global model, then linear regression is not going to be good.
+
+307
+01:23:32.150 --> 01:23:35.509
+Prof. John Tsitsiklis: Very well, so.
+
+308
+01:23:37.980 --> 01:23:57.910
+Prof. John Tsitsiklis: and a very good question, since we talk, if it is not linear, can we take X squared as an independent, variable, short answer? Yes. But please wait until Wednesday, when we will talk a lot more about this. So now let's move to the sort of second topic of the day which is the performance assessment.
+
+309
+01:23:57.960 --> 01:24:13.379
+Prof. John Tsitsiklis: How can do we assess how well we're doing? Okay, how well we're doing is actually 2 different questions, how well are we doing in modeling? That is the estimated Theta. Is it close to the true Theta Star?
+
+310
+01:24:13.380 --> 01:24:37.240
+Prof. John Tsitsiklis: And another type of question is, how well are we predicting? That is the predicted y's, how close are they to the true? Y's, these tend to go together. If you get your thetas right, you're going to be making better predictions. But if you try to quantify using numbers. You're going to be looking at different types of things.
+
+311
+01:24:37.240 --> 01:24:52.039
+Prof. John Tsitsiklis: So to quantify how well we're doing in terms of prediction, a typical measure that's being used in this business is the so-called R squared, coefficient. So let me describe what it is. We have our data set.
+
+312
+01:24:52.460 --> 01:24:56.810
+Prof. John Tsitsiklis: If you were asked to make predictions of whys
+
+313
+01:24:57.280 --> 01:25:06.640
+Prof. John Tsitsiklis: without knowing anything about the X's. So I only give you the Y's of the examples.
+
+314
+01:25:07.210 --> 01:25:12.540
+Prof. John Tsitsiklis: And then for a new person, I ask you, predict the why of that new person?
+
+315
+01:25:13.270 --> 01:25:22.090
+Prof. John Tsitsiklis: What can you do? Well, you just look at the existing Y's in your data set and take the average of those.
+
+316
+01:25:22.440 --> 01:25:33.080
+Prof. John Tsitsiklis: So prediction without taking the X's into account essentially means you're trying to draw a line that does not depend on X,
+
+317
+01:25:33.210 --> 01:25:53.120
+Prof. John Tsitsiklis: a line that does not depend on X is just a constant that does not depend on X, so that means a horizontal line, and it turns out that the best horizontal line that you can get is the average of the Y's. If you were doing that, you would incur a certain sum of squares.
+
+318
+01:25:53.380 --> 01:25:55.640
+Prof. John Tsitsiklis: sum of squared residuals.
+
+319
+01:25:55.770 --> 01:26:06.520
+Prof. John Tsitsiklis: And so it's the sum of those quantities, those distances. And you can think of this as how much variation is there in the Y's.
+
+320
+01:26:07.810 --> 01:26:36.430
+Prof. John Tsitsiklis: Once you run regression, you're going to get a different sum of squares, and that different sum of squares is actually going to be better. It's going to be smaller. Why is it smaller? Well, the blue is a line. The red line is the best line, so the best line has to do better than the blue than the original line. So we do have for sure this type of inequality.
+
+321
+01:26:36.780 --> 01:26:56.959
+Prof. John Tsitsiklis: So the residual sum of squares. You can think of it as how much randomness or variation there is in Y that's left after you take into account the X's. That is how much idiosyncratic randomness there is in some sorts. And now we go and compare the 2.
+
+322
+01:26:57.050 --> 01:27:14.279
+Prof. John Tsitsiklis: If Rss. Is much smaller than Tss, then regression seems to be really helping us to be removing randomness and the way of counting how much smaller it is is by looking at this ratio
+
+323
+01:27:15.950 --> 01:27:25.660
+Prof. John Tsitsiklis: and subtract one from it. That's the coefficient of r squared. Okay, what's that Rss. Over Tss is
+
+324
+01:27:26.440 --> 01:27:34.099
+Prof. John Tsitsiklis: the what fraction of the variation has not been explained.
+
+325
+01:27:34.630 --> 01:27:46.970
+Prof. John Tsitsiklis: One minus. That is how much has been explained. So what fraction of the original randomness has been removed by running linear regression.
+
+326
+01:27:47.110 --> 01:28:04.859
+Prof. John Tsitsiklis: and this r squared coefficient lies always between 0 and one. Why is that Rss is less than tss, so this ratio is less than or equal to one. And so R. Squared is going to be non-negative.
+
+327
+01:28:05.330 --> 01:28:09.900
+Prof. John Tsitsiklis: and Rss is non-negative.
+
+328
+01:28:10.650 --> 01:28:20.310
+Prof. John Tsitsiklis: So one minus something non-negative gives us something less than one. The ideal case is when Rss is one.
+
+329
+01:28:20.760 --> 01:28:26.049
+Prof. John Tsitsiklis: If so, when r squared is one, when r squared is one
+
+330
+01:28:26.340 --> 01:28:41.759
+Prof. John Tsitsiklis: that corresponds to the case where Rss is 0, which means that the residual sum of squares is 0, which means that you are perfectly explaining the data.
+
+331
+01:28:42.410 --> 01:29:10.569
+Prof. John Tsitsiklis: If, on the other hand, R. Squared is 0. That means that regression gave no improvement, and that this estimate is as good as the one that you get from regression. So these are the 2 extreme cases. And you look at the value of R squared to quantify how well you're doing the closer to one the better. High r squared is preferred
+
+332
+01:29:11.560 --> 01:29:19.669
+Prof. John Tsitsiklis: as an illustration. R. Squared measures. How well you're fitting things
+
+333
+01:29:19.670 --> 01:29:43.829
+Prof. John Tsitsiklis: so high. R. Squared means that your data are tightly concentrated around the line and low r squared means that there is more randomness around that line. Is it possible that Tss is equal to 0? Okay, Tss will be equal to 0 if all the Y I's are equal to the y's for all I,
+
+334
+01:29:44.140 --> 01:29:54.880
+Prof. John Tsitsiklis: which means, if all your data points are lined up on a horizontal line. This is a very extreme and never occurring case
+
+335
+01:29:57.260 --> 01:29:59.410
+Prof. John Tsitsiklis: in our particular example.
+
+336
+01:29:59.420 --> 01:30:26.669
+Prof. John Tsitsiklis: Okay, now, Rss. R. Squared is something that your Python software routine or whatever software you use will give it to you right away. And for our particular example, it turns out that r squared is pretty high. It's around 90%. So that says that this model is useful. The advertising budgets explain quite a bit of the sales.
+
+337
+01:30:26.670 --> 01:30:31.990
+Prof. John Tsitsiklis: If, on the other hand, we run simple regression just in terms of newspaper.
+
+338
+01:30:32.460 --> 01:30:50.030
+Prof. John Tsitsiklis: even though this coefficient seems to be substantive. R. Squared, turns out to be very, very small, which says that newspaper advertisement has very little explanatory power. If you're trying to predict to predict sales.
+
+339
+01:30:51.950 --> 01:31:16.719
+Prof. John Tsitsiklis: we can also run simple linear regressions, one variable at a time for the other parts of advertisement. And we see that TV advertisement does have some significant relation with sales. Radio also have to have seems to have some explanatory power for sales, but newspaper has definitely less than those 2.
+
+340
+01:31:16.720 --> 01:31:25.890
+Prof. John Tsitsiklis: Now, whenever you add more variables in a regression, R. Squared will always go up. Why is that
+
+341
+01:31:26.460 --> 01:31:32.009
+Prof. John Tsitsiklis: when you add a new feature or a new variable, you have
+
+342
+01:31:32.190 --> 01:31:37.600
+Prof. John Tsitsiklis: more choices. In what kinds of lines you're going to use.
+
+343
+01:31:39.620 --> 01:31:46.800
+Prof. John Tsitsiklis: Not having a variable is the same as setting the coefficient to 0.
+
+344
+01:31:46.940 --> 01:32:06.920
+Prof. John Tsitsiklis: Not having a variable is like a constraint having a variable removes that constraint, and allows you to play with that variable, you have more flexibility. So you're going to fit the data better. And if you fit the data better, R. Squared is going to go up.
+
+345
+01:32:07.580 --> 01:32:10.109
+Prof. John Tsitsiklis: On the other hand.
+
+346
+01:32:10.710 --> 01:32:35.690
+Prof. John Tsitsiklis: for you to say that the variable is really useful. R. Squared should go up significantly, because if you keep adding more and more variables. You start doing what's called overfitting. And it is just an illusion that you're doing better, even though the variable itself is not really useful because of that story software often gives you
+
+347
+01:32:35.690 --> 01:32:42.130
+Prof. John Tsitsiklis: also a so-called adjusted r squared. That takes into account how many features you have
+
+348
+01:32:42.470 --> 01:33:02.330
+Prof. John Tsitsiklis: now in practice for all sorts of applications you're going to encounter. Where the number of data points is much bigger than the number of features adjusted. R squared and true and initial R. Squared are essentially the same as in the example that we have. So you shouldn't really bother
+
+349
+01:33:02.330 --> 01:33:15.169
+Prof. John Tsitsiklis: with that type of distinction. But the general story is that, as you include more and more variables. You're fitting the data better and better. And R squared is going to go up.
+
+350
+01:33:15.730 --> 01:33:16.570
+Prof. John Tsitsiklis: Yeah.
+
+351
+01:33:20.790 --> 01:33:45.140
+Prof. John Tsitsiklis: Okay, now, what's a good value of R squared. Okay, ankit already answered. It is very much application specific. Something I like to say is that in physics you can discover a new particle with an R squared of 0 point 1 and get a Nobel Prize.
+
+352
+01:33:46.270 --> 01:34:14.459
+Prof. John Tsitsiklis: And that could be that your data are very noisy. But still you manage to find some relation inside those data that establishes that there is a new particle. If, on the other hand, you're trying to make accurate predictions about something, let's say, should I buy this stock or not? Then you may want to have a much higher r squared or in advertisement, and so on. So it really depends on the particular application.
+
+353
+01:34:17.180 --> 01:34:34.139
+Prof. John Tsitsiklis: Okay, so this is about the predictions how we use R squared to quantify how well we're doing on our training set. Now, we can ask questions about estimating the Thetas. How accurate are we?
+
+354
+01:34:34.600 --> 01:34:57.999
+Prof. John Tsitsiklis: And here I want to bring in a couple of concepts that are important. And the biggest concept is to understand that our estimate is a random, variable, has to be thought of as a random variable. The reason for the randomness is that it depends on the data, and the data are generated according to some random mechanism.
+
+355
+01:34:58.160 --> 01:35:00.840
+Prof. John Tsitsiklis: If we're sampling from a population.
+
+356
+01:35:01.190 --> 01:35:18.969
+Prof. John Tsitsiklis: the data are drawn at random because we're doing random sample. If alternatively, we have the mathematical model of a linear world, we had those idiosyncratic noises which are again give randomness.
+
+357
+01:35:19.970 --> 01:35:48.709
+Prof. John Tsitsiklis: So Theta hats are obtained from the data. The data are random, especially the Y's. The responses have some randomness in them, and for that reason Theta hat is random. What does that mean operationally? Let's look at one of the components of theta. Let's look at the J-th component. That's sort of one particular value. One particular component of the true coefficient vector
+
+358
+01:35:49.230 --> 01:35:55.030
+Prof. John Tsitsiklis: you get your random, you get your data, you run your regression.
+
+359
+01:35:55.180 --> 01:36:01.729
+Prof. John Tsitsiklis: the Theta hat you're going to get. There's no way it's going to be exactly equal to Theta Star.
+
+360
+01:36:02.280 --> 01:36:09.379
+Prof. John Tsitsiklis: You just hope that it's not too far. It's going to sound to be some value, let's say, close to the true value.
+
+361
+01:36:10.850 --> 01:36:16.590
+Prof. John Tsitsiklis: But if another statistician goes and tomorrow gets a new sample.
+
+362
+01:36:16.870 --> 01:36:33.830
+Prof. John Tsitsiklis: new data records a new sample out of that population and runs regression, they're not going to get the exact same results as you did. They're going to get some different results. And if a 3rd statistician does it, they're going to get a different estimate.
+
+363
+01:36:33.910 --> 01:36:56.610
+Prof. John Tsitsiklis: So every new statistician, every new data set, is going to give a little bit of a different estimate. So you can keep doing that. Now imagine that you have a thousand statisticians. Each one of them got an estimate. Look at the estimates that you got, make a histogram of those estimates.
+
+364
+01:36:57.790 --> 01:37:05.260
+Prof. John Tsitsiklis: and that histogram tells you something about the randomness in the Theta hats.
+
+365
+01:37:06.130 --> 01:37:19.570
+Prof. John Tsitsiklis: Think of Theta hat as being a random variable, and it has a distribution which distribution is basically what this histogram would be if you had a million different statisticians.
+
+366
+01:37:19.690 --> 01:37:38.089
+Prof. John Tsitsiklis: So again, the story would be a typical statistician when they get a random data set. They're going to be producing an estimate, and that estimate will fall somewhere in this range and is going to be distributed according to this distribution.
+
+367
+01:37:39.940 --> 01:37:43.989
+Prof. John Tsitsiklis: Why is that distribution an interesting thing to look at?
+
+368
+01:37:44.710 --> 01:37:54.830
+Prof. John Tsitsiklis: Well, for one thing, we look at this distribution, and we notice that on the average, the mean of this distribution is somewhere here.
+
+369
+01:37:55.750 --> 01:38:19.560
+Prof. John Tsitsiklis: This is the average over the 1 million statisticians of what kind of estimate they would get, and that picture indicates a situation where the average statistician gets an estimate that's on the low side. So the estimation method that's being used by those statisticians is, we say that it is biased.
+
+370
+01:38:19.880 --> 01:38:27.200
+Prof. John Tsitsiklis: On the average, it tends to systematically undershoot. The true value
+
+371
+01:38:27.970 --> 01:38:45.490
+Prof. John Tsitsiklis: biased methods is not something that we like. What we like a lot better is methods that are unbiased. For example, if the distribution of Theta hat happens to be something like this, so the
+
+372
+01:38:45.560 --> 01:39:06.949
+Prof. John Tsitsiklis: the average of that distribution is the same as the true value, then we say that the method is unbiased. This is a desirable property of estimation, procedures that they do not make systematic mistakes on upwards or or downwards.
+
+373
+01:39:07.160 --> 01:39:16.540
+Prof. John Tsitsiklis: and a piece of good news, if we make the mathematical assumptions that the world is truly linear.
+
+374
+01:39:16.640 --> 01:39:23.599
+Prof. John Tsitsiklis: The assumption that we made when we had the maximum likelihood story. If the world is truly linear
+
+375
+01:39:24.140 --> 01:39:34.309
+Prof. John Tsitsiklis: and we run ordinary, least squares, the ordinary, least squares method is unbiased. This is a piece of good news
+
+376
+01:39:34.720 --> 01:39:44.340
+Prof. John Tsitsiklis: piece of good news about ordinary, least squares. At least, the method is not systematically wrong in either direction.
+
+377
+01:39:45.690 --> 01:39:53.130
+Prof. John Tsitsiklis: Okay, so it's unbiased. Next question would be, how big is the mistake that we're making?
+
+378
+01:39:53.380 --> 01:39:55.100
+Prof. John Tsitsiklis: There's a true value.
+
+379
+01:39:55.770 --> 01:40:09.199
+Prof. John Tsitsiklis: And there's the estimate produced by a typical statistician on the average, over all possible statisticians, or on the average, over a random
+
+380
+01:40:09.380 --> 01:40:37.399
+Prof. John Tsitsiklis: randomly generated data set on the average. How big is the squared error that we're getting? This is a quantity that's of interest, and because ols is unbiased, the mean of this distribution is Theta star itself. So this quantity is just the variance of Theta hat. It's the variance of
+
+381
+01:40:37.867 --> 01:40:39.739
+Prof. John Tsitsiklis: this of this distribution.
+
+382
+01:40:42.180 --> 01:40:53.430
+Prof. John Tsitsiklis: So because ols is unbiased, the mean squared error is just the variance. If you were to more generally.
+
+383
+01:40:53.650 --> 01:41:01.319
+Prof. John Tsitsiklis: there's 2 contributions to the error of an estimation procedure. One contribution comes from the bias.
+
+384
+01:41:02.200 --> 01:41:07.740
+Prof. John Tsitsiklis: and another contribution comes because of the randomness on the Theta hats
+
+385
+01:41:07.840 --> 01:41:36.620
+Prof. John Tsitsiklis: for linear regression. We only care about the variance. The variance tells us how big the errors, the estimation errors will tend to be. So. It's a quantity of interest. We would like to know what it is and then use our knowledge of what it is to do interesting things as we're going to do as the hour comes to the end. So we want to focus on that variance.
+
+386
+01:41:36.620 --> 01:41:57.770
+Prof. John Tsitsiklis: How can we figure out that variance? One way would be to take a thousand statisticians, each one generate a different data set. Get this histogram and see how wide it is. But that's, of course, not practical to have a thousand statisticians. The good news is that
+
+387
+01:41:57.910 --> 01:42:14.189
+Prof. John Tsitsiklis: we can get hold of that variance, and we can actually get hold of a lot of information about that distribution of Theta hat. First, st there's a mathematical fact that the Theta Hats have a normal distribution.
+
+388
+01:42:14.290 --> 01:42:33.950
+Prof. John Tsitsiklis: The distribution I was drawing in the previous slide is actually a normal one. It's an approximate fact which is a consequence of the central limit theorem of probability theory. It's an exact fact. If we also make the assumption that the idiosyncratic noises are normal.
+
+389
+01:42:34.530 --> 01:42:35.900
+Prof. John Tsitsiklis: So the
+
+390
+01:42:36.300 --> 01:42:49.659
+Prof. John Tsitsiklis: bottom line of what I'm saying here is that Theta hat, the estimate is never, never going to be correct, is going to be somewhere close to Theta Star.
+
+391
+01:42:50.630 --> 01:43:15.460
+Prof. John Tsitsiklis: How close it's random. It's random, but it has a distribution that's centered at Theta Star. That's because the estimate is unbiased, and it has a certain standard deviation, and that standard deviation is something that fortunately can be estimated or calculated.
+
+392
+01:43:17.760 --> 01:43:26.209
+Prof. John Tsitsiklis: There's 1 more useful stuff about this distribution. Once we know that it's a normal distribution.
+
+393
+01:43:26.310 --> 01:43:38.119
+Prof. John Tsitsiklis: it's a known property of normal distributions that with probability, 95%, you fall within essentially 2 standard deviations from the mean.
+
+394
+01:43:38.670 --> 01:43:52.100
+Prof. John Tsitsiklis: That's the main property of normal distributions we're going to use. If you know that something is normally distributed, then you know that with probability, 95%, it's going to be within 2 standard deviations from the mean.
+
+395
+01:43:53.400 --> 01:44:04.140
+Prof. John Tsitsiklis: So that tells us something about the accuracy of the estimates. So that tells us that it would be nice to know what that standard deviation is.
+
+396
+01:44:04.760 --> 01:44:14.370
+Prof. John Tsitsiklis: That standard deviation is a very important statistical quantity. It goes under the name of standard error, and our agenda now should be.
+
+397
+01:44:14.900 --> 01:44:21.839
+Prof. John Tsitsiklis: Let's see if we can calculate the standard error, and if we can use it to do something useful.
+
+398
+01:44:22.100 --> 01:44:26.899
+Prof. John Tsitsiklis: The good news is that we can calculate it.
+
+399
+01:44:27.210 --> 01:44:43.699
+Prof. John Tsitsiklis: and the even better news is that you shouldn't bother knowing how it's calculated. The software implements it. It takes the data. And somehow, from the data, it can figure out what that standard error is going to be.
+
+400
+01:44:43.930 --> 01:45:08.799
+Prof. John Tsitsiklis: If you want more detail. I will not go through that slide. But the software reports for you something that's called the covariance matrix of the estimates. It's a table. And by looking at the entries of that table and taking the square roots, you can get the standard errors. So the software calculates those things. Well, it doesn't exactly calculate them.
+
+401
+01:45:08.800 --> 01:45:32.570
+Prof. John Tsitsiklis: estimates them, using the available data. The story of how exactly it estimates it is just for the people who really want to do a deep dive into the math. The story is all summarized in that part of the slide which I'm not going to cover. Okay, this is a good time to pause and take some questions from the chat. So, ankit, if you can
+
+402
+01:45:33.170 --> 01:45:38.720
+Prof. John Tsitsiklis: guide us for another 5, 6 min.
+
+403
+01:45:39.370 --> 01:45:53.950
+Moderator - Ankit Agrawal: Yes, Professor, one of the questions that Siddant is asking to know this, wouldn't we need to know the true value? And if we know the true value? Do we need to estimate data hat? So the question is about the normal distribution that.
+
+404
+01:45:53.950 --> 01:45:58.340
+Prof. John Tsitsiklis: Wait. The question is to know this, to know what.
+
+405
+01:45:58.840 --> 01:46:07.100
+Moderator - Ankit Agrawal: To know the normal distribution and the mean being around the true data right?
+
+406
+01:46:07.566 --> 01:46:10.879
+Prof. John Tsitsiklis: So to know this, wouldn't we need to know the true value?
+
+407
+01:46:11.740 --> 01:46:16.000
+Prof. John Tsitsiklis: Okay, we okay.
+
+408
+01:46:16.270 --> 01:46:32.879
+Prof. John Tsitsiklis: we know that the normal distribution is with probability, 95% in this interval. So that's a general statement. That's true. Whether we know Theta Star or we know the Sigmas.
+
+409
+01:46:34.060 --> 01:46:50.209
+Prof. John Tsitsiklis: But we but we don't know where that interval is. I guess that's the point. We don't know Theta Star, so we do not know where that interval is, but we know that this interval has a width, which is 2 Sigma.
+
+410
+01:46:51.700 --> 01:46:57.699
+Prof. John Tsitsiklis: Okay, to know this width, we need to know, Sigma.
+
+411
+01:46:58.230 --> 01:47:13.729
+Prof. John Tsitsiklis: And what I just said in the last slide is that the software implements for us does some calculations and provides us with a pretty accurate estimate of Sigma.
+
+412
+01:47:13.990 --> 01:47:17.880
+Prof. John Tsitsiklis: So based on the data we can estimate Sigma.
+
+413
+01:47:18.040 --> 01:47:25.329
+Prof. John Tsitsiklis: Regarding Theta Star. We do not know what it is. We only have the estimate.
+
+414
+01:47:25.470 --> 01:47:40.090
+Prof. John Tsitsiklis: but the estimate is not Theta star itself. It's somewhere close. So we know that it is a normal distribution. We know the width of the normal distribution, but we don't know exactly where that normal distribution is sitting.
+
+415
+01:47:42.920 --> 01:47:44.479
+Prof. John Tsitsiklis: Hope that answers it.
+
+416
+01:47:47.231 --> 01:47:54.000
+Moderator - Ankit Agrawal: Kenny is asking what made us conclude that ordinary least square is an unbiased method.
+
+417
+01:47:54.000 --> 01:48:04.649
+Prof. John Tsitsiklis: Oh, no, there's a derivation. I skipped that derivation. If you care, you take the formula for
+
+418
+01:48:05.870 --> 01:48:15.290
+Prof. John Tsitsiklis: the formula for theta hat, and then you take the expectation of this, and
+
+419
+01:48:15.450 --> 01:48:35.860
+Prof. John Tsitsiklis: one takes the expectation for the case. When the X's are fixed, we're left with expectations of Y, and you use the mathematical model that we have for the y's to calculate the expectation. And then some cancellations happen, and you end up just with Theta Star.
+
+420
+01:48:36.020 --> 01:48:44.169
+Prof. John Tsitsiklis: So it's not something that I covered. I just stated it as a fact, and the derivation is not too difficult.
+
+421
+01:48:45.240 --> 01:48:56.180
+Moderator - Ankit Agrawal: Yeah, I remember that one of the derivations, a simpler way is just to take the derivative of the mean squared error and equate it to 0, and that can also produce the data. Add
+
+422
+01:48:56.770 --> 01:48:58.279
+Moderator - Ankit Agrawal: for us.
+
+423
+01:48:59.165 --> 01:49:13.239
+Moderator - Ankit Agrawal: Another question, I see, is from Hugo, who is asking, How can I assess the accuracy of the standard error, calculation. If my data still appears skewed after normalization.
+
+424
+01:49:14.180 --> 01:49:26.450
+Prof. John Tsitsiklis: I? Okay, that's an interesting question. So we have Theta star. We estimate it with Theta hat we try to. We ask the question whether they're close.
+
+425
+01:49:26.640 --> 01:49:32.089
+Prof. John Tsitsiklis: In order to answer that question, we need to know Sigma J.
+
+426
+01:49:34.570 --> 01:49:39.249
+Prof. John Tsitsiklis: We don't know Sigma, J. So we estimate Sigma, J.
+
+427
+01:49:39.410 --> 01:50:00.380
+Prof. John Tsitsiklis: So there's a further estimation that's happening. Is this estimation close or not? So here we kind of trust, or take it for granted that this estimation will be closed. It will be close so that we can use the estimated standard error.
+
+428
+01:50:01.070 --> 01:50:14.049
+Prof. John Tsitsiklis: How accurate is that estimation itself? Okay, then, if you really want to answer that question, you have to start doing some statistical analysis, and if distributions are
+
+429
+01:50:14.080 --> 01:50:42.159
+Prof. John Tsitsiklis: very skewed, or they have very fat tails, then that estimation itself will not be very, not very accurate in practice. It doesn't. That's not usually our biggest source of concern, that is, if we want to get a range for Theta hat. Even if we get that range and we're off by 10 or 20%,
+
+430
+01:50:42.710 --> 01:50:58.150
+Prof. John Tsitsiklis: it's still okay. I mean, we still got pretty much a good conclusion. We want to ideally. We want to have good accuracy here. That's what we care mostly.
+
+431
+01:50:59.040 --> 01:51:09.130
+Prof. John Tsitsiklis: and to get to get an assessment of that, we do a few approximate things, and there it's less important
+
+432
+01:51:09.270 --> 01:51:23.389
+Prof. John Tsitsiklis: whether those approximations are true. Or, to put it differently, statisticians will spend most of their time trying to get Theta hats close to Theta stars. They don't care so much about
+
+433
+01:51:23.510 --> 01:51:34.459
+Prof. John Tsitsiklis: the difference between Sigma J. And Sigma hat. J. So whatever standard errors you get from your software, you just take them for granted and continue from there.
+
+434
+01:51:40.990 --> 01:51:53.829
+Moderator - Ankit Agrawal: Barkesh is asking when we are trying to find out outliers, what would be the right standard deviation to use plus or minus 2 standard deviation or plus or minus 3 standard deviation.
+
+435
+01:51:58.630 --> 01:52:04.530
+Prof. John Tsitsiklis: Okay, to find outliers. Typically, you would look at the residuals
+
+436
+01:52:05.050 --> 01:52:13.600
+Prof. John Tsitsiklis: and those residuals would be distributed in some range. So you can make a histogram of those.
+
+437
+01:52:18.380 --> 01:52:22.070
+Prof. John Tsitsiklis: If that histogram kind of looks like normal.
+
+438
+01:52:22.280 --> 01:52:51.880
+Prof. John Tsitsiklis: then you might say there are actually no outliers. We're assuming that the phenomenon is normal. You always expect that there is going to be a few things that are like 2 standard deviations away if it's not normal. But it looks. It is something like this, and then has a bump somewhere out there. Then you might say that these things are outliers. Okay, what does it mean out there?
+
+439
+01:52:52.110 --> 01:52:53.200
+Prof. John Tsitsiklis: No.
+
+440
+01:52:53.480 --> 01:53:16.180
+Prof. John Tsitsiklis: Would I use 2 standard deviations or 3 standard deviations? I think that would have a lot to do with the application and the experience and all that. And also how many data points you have. 2 standard deviations feels too small. Maybe I would go for 3 ankit. What would you use in practice?
+
+441
+01:53:16.462 --> 01:53:29.760
+Moderator - Ankit Agrawal: As you said I. I tried to answer the question in the chat, too. It is very application specific. I mean, sometimes you're looking at income data. And we have seen data which is like 4 standard deviations away. And it's still part of a general trend.
+
+442
+01:53:29.760 --> 01:53:30.110
+Prof. John Tsitsiklis: Yes.
+
+443
+01:53:30.110 --> 01:53:33.589
+Moderator - Ankit Agrawal: It is not an outlier. And sometimes we have seen data like
+
+444
+01:53:34.233 --> 01:53:49.780
+Moderator - Ankit Agrawal: like, let's say, percentiles of a score right? And within 1.5 standard deviation. We are already within an outlier. So so it is very application specific. You have to look at individual features and decide what that threshold will look like.
+
+445
+01:53:50.345 --> 01:54:11.329
+Moderator - Ankit Agrawal: At least, that's what I've seen from the applications. But yeah, I mean, if if you are just generalizing it, maybe 2.5 or 3. Standard deviation is good. I know 2.5 is the consideration for interquantile range, so maybe 2.5 is a better consideration, but but in general it is application specific.
+
+446
+01:54:13.320 --> 01:54:17.019
+Moderator - Ankit Agrawal: We'll take one more question. Sorry, Professor, go ahead.
+
+447
+01:54:17.020 --> 01:54:18.590
+Prof. John Tsitsiklis: Yeah, okay, go ahead.
+
+448
+01:54:18.900 --> 01:54:19.430
+Prof. John Tsitsiklis: We'll take one.
+
+449
+01:54:19.810 --> 01:54:31.240
+Moderator - Ankit Agrawal: Okay, we'll take one question, and then we can continue. Do you have any recommendations for any tools that can be used for performing a statistical analysis on linear regression.
+
+450
+01:54:35.020 --> 01:54:45.599
+Prof. John Tsitsiklis: Like meta tools, I mean, the statistical analysis would be just the standard errors. If you have a fixed
+
+451
+01:54:45.670 --> 01:55:13.390
+Prof. John Tsitsiklis: choice of the features, I think tools are generally useful for doing meta analysis, that is, start asking questions. Which features should I choose? Which ones do I put in? And which ones do I put out and understand that there's lots of tools and lots of companies developing more and more platforms where you can automate this type of business, although
+
+452
+01:55:13.470 --> 01:55:16.840
+Prof. John Tsitsiklis: I don't have a preferred one to point to.
+
+453
+01:55:18.900 --> 01:55:39.019
+Moderator - Ankit Agrawal: And and just to add to that, you can use any programming language as well. Like tools are great as well. But also any programming language has capabilities to do this as well. And in the weekend mental learning session you'll see how we can do this in Python. We can print out the standard error, the P. Value, the confidence interval, all of that in python as well.
+
+454
+01:55:39.390 --> 01:55:43.109
+Moderator - Ankit Agrawal: So with that, Professor, we can continue the lecture.
+
+455
+01:55:43.320 --> 01:55:50.959
+Prof. John Tsitsiklis: Yes. So now we're coming to the really interesting stuff where we wanted to get to.
+
+456
+01:55:51.170 --> 01:55:55.759
+Prof. John Tsitsiklis: So there's a Theta star that we don't know what it is.
+
+457
+01:55:57.290 --> 01:56:01.599
+Prof. John Tsitsiklis: Estimates are random, so they have a certain width.
+
+458
+01:56:02.580 --> 01:56:18.989
+Prof. John Tsitsiklis: Some kind of math theory tells us that estimates obey a normal distribution, so that means that estimates will be within 2 standard deviations from the true value with probability, 95%.
+
+459
+01:56:19.810 --> 01:56:26.589
+Prof. John Tsitsiklis: That's a useful statement. It tells us how close are the estimates to the true value.
+
+460
+01:56:26.960 --> 01:56:40.690
+Prof. John Tsitsiklis: We don't know the true value. We don't know where the distribution is sitting, but it's still a useful statement. Again, it says the following, with probability, 95%. The estimate
+
+461
+01:56:40.800 --> 01:56:45.589
+Prof. John Tsitsiklis: is within 2 standard deviations from the true value.
+
+462
+01:56:48.050 --> 01:56:52.289
+Prof. John Tsitsiklis: Now you can turn that statement around the estimates
+
+463
+01:56:52.510 --> 01:57:11.529
+Prof. John Tsitsiklis: is 2 standard deviations from the true value. That's the same as saying the true value is within 2 standard deviations from the estimate. So I can start with the estimate, and within 2 standard deviations of the estimate. That's where the true value is going to be.
+
+464
+01:57:12.870 --> 01:57:28.020
+Prof. John Tsitsiklis: So we do get something useful out of that story, even though we don't know where Theta Star is. But we know that with probability 95% Theta star is going to be inside that interval.
+
+465
+01:57:28.350 --> 01:57:45.469
+Prof. John Tsitsiklis: We call that interval a confidence interval. And actually, we call it a 95% confidence interval, because I use the probability of 95 here, if, instead of 95, I was using 99, this number here.
+
+466
+01:57:45.880 --> 01:58:11.799
+Prof. John Tsitsiklis: it would not be 2 standard deviations away. It would be more like 2.6 standard deviations away, and you would use 2.6 there, and you would get 99% confidence interval. But 95 is the more common one that people use in practice. So we get this confidence interval. What's the meaning of the confidence interval? Again, to repeat
+
+467
+01:58:11.830 --> 01:58:20.290
+Prof. John Tsitsiklis: with probability 95%. The true value is inside the confidence interval.
+
+468
+01:58:20.570 --> 01:58:37.270
+Prof. John Tsitsiklis: Okay? And now let me ask a question, and please answer in the chat. When we write probability of something that something must have some randomness, otherwise there's no point in talking about probabilities.
+
+469
+01:58:37.620 --> 01:58:49.160
+Prof. John Tsitsiklis: which one is the random quantity. Is it Theta, or is it the confidence interval which one of the 2 is random in this probabilistic statement.
+
+470
+01:59:02.210 --> 01:59:17.429
+Prof. John Tsitsiklis: Okay, by now, I think the crowd has definitely convergent theta being the random thing, and this is the most common way to misunderstand what confidence intervals are.
+
+471
+01:59:18.430 --> 01:59:38.459
+Prof. John Tsitsiklis: I never said anything about randomness in Theta Star. Theta Star is the true value that has to do with the true model. Theta Star is a constant. Let's say we're trying to estimate the speed of light. It's a physical constant.
+
+472
+01:59:39.020 --> 01:59:46.099
+Prof. John Tsitsiklis: When we estimate it. Our estimates have noise, so Theta hat is random.
+
+473
+01:59:47.320 --> 01:59:51.549
+Prof. John Tsitsiklis: but Theta star is a constant.
+
+474
+01:59:52.420 --> 02:00:18.290
+Prof. John Tsitsiklis: Now Theta hat is random because it's random. The confidence interval itself, the location of the confidence interval is random. So it's the confidence interval. That's the random quantity in that statement. Theta star is something fixed that happens to be unknown. One way I sort of like to represent that story is the following, there's a true value of Theta star.
+
+475
+02:00:18.560 --> 02:00:43.119
+Prof. John Tsitsiklis: One statistician goes, collects data and creates a confidence interval, and that confidence interval is lucky and captures Theta Star. Another statistician goes, gets their data set. Their confidence interval is unlucky. They don't capture Theta Star. So you have now a million statisticians. Each one gets a data set. Each one gets an estimate.
+
+476
+02:00:43.730 --> 02:01:08.660
+Prof. John Tsitsiklis: What we're saying is that 95% of those statisticians will be lucky and will capture the true value, and 5% of the statisticians will be unlucky and will miss it. So that's the correct interpretation of what a confidence interval means. It's the so-called frequentist interpretation. It's about the frequency with
+
+477
+02:01:08.660 --> 02:01:17.779
+Prof. John Tsitsiklis: which the true value is getting captured. It's not a probabilistic statement about where Theta Star is actually going to be.
+
+478
+02:01:18.890 --> 02:01:27.370
+Prof. John Tsitsiklis: So. This is one use of the of the standard errors.
+
+479
+02:01:27.850 --> 02:01:38.790
+Prof. John Tsitsiklis: Once we have the standard errors. We can calculate confidence interval, and the width of the confidence intervals, and we have the confidence intervals themselves.
+
+480
+02:01:39.100 --> 02:01:47.140
+Prof. John Tsitsiklis: The second use is the following, it's in the business of hypothesis. Testing what is hypothesis? Testing about
+
+481
+02:01:47.690 --> 02:01:56.719
+Prof. John Tsitsiklis: a typical hypothesis is a typical so-called null hypothesis is that a certain coefficient is 0
+
+482
+02:01:56.840 --> 02:02:01.450
+Prof. John Tsitsiklis: which means that a certain feature has no effect.
+
+483
+02:02:03.240 --> 02:02:06.970
+Prof. John Tsitsiklis: Okay, so a typical term
+
+484
+02:02:07.240 --> 02:02:30.959
+Prof. John Tsitsiklis: in a model is something like this, when theta is 0, then X has no effect on the quantity that we're predicting. So that's what we're asking. Does a certain feature have an effect on the outcome of interest? How do we approach this question to make that decision. And here's a methodology. It's a pretty simple one.
+
+485
+02:02:31.800 --> 02:02:37.220
+Prof. John Tsitsiklis: We form the estimate, and then we form the confidence interval.
+
+486
+02:02:37.500 --> 02:02:42.750
+Prof. John Tsitsiklis: If the confidence interval is away from 0.
+
+487
+02:02:43.250 --> 02:03:08.250
+Prof. John Tsitsiklis: Then this is evidence. We don't know what Theta Star actually is, but whatever it is, it's probably somewhere in the confidence interval. So it's going to be non-zero. And so in that case, we reject the null hypothesis, and we say we think it's non-zero. So there is an effect. We think that the hypothesis is wrong.
+
+488
+02:03:08.790 --> 02:03:15.540
+Prof. John Tsitsiklis: If, on the other hand, the confidence interval is 0, what that tells us is that
+
+489
+02:03:15.690 --> 02:03:28.519
+Prof. John Tsitsiklis: 0 is a possible value, it's compatible with the estimate that we have, and so we do not reject the null. What we say is that the null could be true.
+
+490
+02:03:29.590 --> 02:03:39.600
+Prof. John Tsitsiklis: Ok, there's no way to make an absolute decision, that it is true, but at least the data are compatible with the null hypothesis being true.
+
+491
+02:03:39.720 --> 02:03:56.670
+Prof. John Tsitsiklis: So that's a simple way of making hypothesis and making a decision? Do we think that a certain coefficient is 0 or not with this way of making decisions? Of course, sometimes we will be making mistakes, and one type of mistake is.
+
+492
+02:03:57.540 --> 02:03:59.670
+Prof. John Tsitsiklis: there is no effect.
+
+493
+02:04:00.630 --> 02:04:06.969
+Prof. John Tsitsiklis: On the other hand, we reject the null, so we think that there is an effect
+
+494
+02:04:07.450 --> 02:04:10.460
+Prof. John Tsitsiklis: we call that a false discovery.
+
+495
+02:04:11.190 --> 02:04:30.800
+Prof. John Tsitsiklis: We think that a certain feature has an effect, whereas in reality it didn't have. If you're talking about biology. We think that a certain gene has an effect on some disease, but in reality it doesn't have an effect. So it's a false discovery of a bad gene.
+
+496
+02:04:31.280 --> 02:04:41.110
+Prof. John Tsitsiklis: So what's the false discovery rate? When do we make that mistake? Yeah. And it's the same pretty much like a false positive.
+
+497
+02:04:41.350 --> 02:04:48.420
+Prof. John Tsitsiklis: How often do we make that mistake, we make that mistake if 0 is the true value.
+
+498
+02:04:48.810 --> 02:04:54.000
+Prof. John Tsitsiklis: But the confidence interval misses 0.
+
+499
+02:04:54.240 --> 02:04:56.239
+Prof. John Tsitsiklis: How often does this happen?
+
+500
+02:04:56.440 --> 02:05:17.569
+Prof. John Tsitsiklis: Well, the confidence interval misses 0 with probability, 5%. If we're using 95% confidence intervals. Okay, so this approach, this hypothesis, testing methodology has a false discovery rate or false alarm rate of 5%.
+
+501
+02:05:19.520 --> 02:05:46.130
+Prof. John Tsitsiklis: Another way of describing the results of hypothesis tests is in terms of so-called p-values. It's a term that's being used a lot in statistics. And here's, in short, what p-values are under the null hypothesis. The true value is 0. If I get a certain estimate, I ask, how compatible is it with being 0?
+
+502
+02:05:46.130 --> 02:05:51.210
+Prof. John Tsitsiklis: Another way to phrase it is! How much of an outlier do I see
+
+503
+02:05:51.240 --> 02:06:00.650
+Prof. John Tsitsiklis: how much of an outlier I can quantify it by looking at how much of the probability is out there.
+
+504
+02:06:01.210 --> 02:06:08.840
+Prof. John Tsitsiklis: and that tells me how likely or unlikely it is to see such a big Theta hat.
+
+505
+02:06:09.070 --> 02:06:36.659
+Prof. John Tsitsiklis: and that number. This probability that's left in the tails. That probability we call it the p-value. When P is small. That means that such a Theta hat is very unlikely to be true under the null hypothesis so small Theta hat you reject the null hypothesis, and the world test really corresponds to when the p-value is less than 5%, then you reject the null
+
+506
+02:06:36.860 --> 02:07:02.310
+Prof. John Tsitsiklis: going back to our example. Now, the software produces for us not just the coefficients, but also the standard errors. Once we have the standard errors, we can produce the confidence intervals, and we notice that 0 is outside those 3 confidence intervals. But 0 is inside this confidence interval.
+
+507
+02:07:04.500 --> 02:07:11.820
+Prof. John Tsitsiklis: 0 is not inside the 1st 3 confidence intervals. And so we reject the null.
+
+508
+02:07:12.140 --> 02:07:30.289
+Prof. John Tsitsiklis: and we say that these 3 coefficients are significant. That is, the data suggests that these coefficients are non-zero. On the other hand, the data are such that newspaper could be 0.
+
+509
+02:07:30.940 --> 02:07:43.079
+Prof. John Tsitsiklis: 0 is inside the confidence interval. So we do not reject the null. We say that the null hypothesis, the 0 hypothesis, is compatible with the data that we have.
+
+510
+02:07:43.220 --> 02:08:08.089
+Prof. John Tsitsiklis: and so we end up with a conclusion where we think that newspaper has no effect. Let's not advertise in newspaper anymore. Let's just keep TV and radio which seem to have significant effects, some words of caution. Here one should always be careful. How do we use words when we reject the null?
+
+511
+02:08:08.990 --> 02:08:28.880
+Prof. John Tsitsiklis: So essentially, we decide that there is an effect. We're not really making a conclusion that there is an effect. All we're saying is that the data suggests an effect. What we see is unlikely to be generated, a model where the null is 0.
+
+512
+02:08:29.150 --> 02:08:43.989
+Prof. John Tsitsiklis: But keeping in mind that we might also be wrong 5% of the time our conclusion will be incorrect, even though the null is true, we will reject it. 5% of the time.
+
+513
+02:08:45.270 --> 02:09:06.460
+Prof. John Tsitsiklis: Misinterpretations are even more common when we do not reject the null, and we say there is no effect that doesn't prove that there is no effect. It only says that, based on the data that we have. We do not have evidence, strong evidence to say that there is an effect.
+
+514
+02:09:06.460 --> 02:09:31.130
+Prof. John Tsitsiklis: We do not have evidence that we have seen an effect. But this can happen in many ways. One possibility is that indeed there is no effect, but it could also be that there is that there is an effect, but the effect is small, and we have too little data to see it. So one must always be careful not to state conclusions that are not
+
+515
+02:09:31.130 --> 02:09:41.890
+Prof. John Tsitsiklis: warranted the data only kind of make suggestions, and they say the data are compatible with such a conclusion, but not compatible with another conclusion.
+
+516
+02:09:41.890 --> 02:09:56.609
+Prof. John Tsitsiklis: I will just say, since we're out of time very quickly over the last slide. We also care about making good predictions, and we want to say something about the accuracy of the predictions.
+
+517
+02:09:56.910 --> 02:10:09.540
+Prof. John Tsitsiklis: Predictions are wrong because of 2 sources of error. Y is different from Y hat. For 2 reasons. One is because Theta hat is different from Theta Star.
+
+518
+02:10:10.710 --> 02:10:16.219
+Prof. John Tsitsiklis: and Theta hat, being different from Theta Star, has to do with getting the wrong line.
+
+519
+02:10:16.790 --> 02:10:30.009
+Prof. John Tsitsiklis: Our estimated model is a particular line, but the true line will be a little different. Where is it? We can create confidence intervals about the location of the line.
+
+520
+02:10:31.660 --> 02:10:43.899
+Prof. John Tsitsiklis: But we're going to be making mistakes also because of the W's. The w's add to the y's. There's no way that we can predict those w's.
+
+521
+02:10:44.030 --> 02:10:51.930
+Prof. John Tsitsiklis: And so when you're trying to predict the why you're going to get confidence intervals that are much wider.
+
+522
+02:10:52.280 --> 02:11:15.030
+Prof. John Tsitsiklis: So there's 2 types of confidence intervals in prediction. One is confidence interval that has to do. How accurately did I get the line? And the other is a confidence interval. How accurately I can predict the Y, so individual predictions are much more noisy, and so they would have much longer confidence intervals.
+
+523
+02:11:15.030 --> 02:11:33.230
+Prof. John Tsitsiklis: So I'll end here, flashing the slide with the summary, and pass now the baton to our moderator and our mentor. Thank you all for listening. We'll take some of the questions, but I'll let you answer them.
+
+524
+02:11:33.510 --> 02:11:37.450
+Prof. John Tsitsiklis: I will just stick, stay around.
+
+525
+02:11:38.560 --> 02:11:42.789
+Prof. John Tsitsiklis: maybe offer an occasional comment. But, ankit, it's in your hands.
+
+526
+02:11:44.230 --> 02:11:52.210
+Moderator - Ankit Agrawal: Thank you so much, Professor, for that wonderful lecture. So we are joined by Shubham today. Hey? Good morning, Shubham.
+
+527
+02:11:52.420 --> 02:11:53.930
+[GL Mentor] Shubham Sharma: Hi! Good morning, ankit.
+
+528
+02:11:55.016 --> 02:12:21.019
+Moderator - Ankit Agrawal: Let's let's jump right into the questions over here, since I see a lot of questions coming in just for everybody. If you have questions feel free to ask now, we'll try to address as many questions as we can. In the next 30 min. So one of the questions we have is from Cola. Do we pick percentage for confidence interval by fields? Or it's purely based on discretion.
+
+529
+02:12:24.090 --> 02:12:39.120
+[GL Mentor] Shubham Sharma: So it. Usually it's an industry standard which is followed. And the intuition is that for more critical applications you want to have a lower significance level, which means a higher confidence interval.
+
+530
+02:12:39.250 --> 02:13:06.600
+[GL Mentor] Shubham Sharma: But, for example, more critical applications can be healthcare applications or applications related to astronomy, right where accuracy is really very important. On the other hand, an application like marketing, where you can afford to have some some errors. There you would go for a relatively higher significance level, and that means a relatively lower confidence interval.
+
+531
+02:13:09.240 --> 02:13:32.320
+Moderator - Ankit Agrawal: Yeah, just to add to that by default, we consider 95% as a default value in data science, most software is built around that idea of 95%. But yes, it is something that you can change. It is a hyper parameter to the model. So you can change that value to 99% or 70% depending on what your application requires. As Shaba mentions.
+
+532
+02:13:32.786 --> 02:13:40.530
+Moderator - Ankit Agrawal: Ravi is asking, we made an assumption that the world is linear. How do we know when a linear model will not work.
+
+533
+02:13:42.430 --> 02:13:43.770
+[GL Mentor] Shubham Sharma: Yeah. So
+
+534
+02:13:44.000 --> 02:13:56.390
+[GL Mentor] Shubham Sharma: most real world data sets will not have a perfect linear relationship. And that's why it's a very good question. And I understand this question, that then why or when do we use linear digression
+
+535
+02:13:56.540 --> 02:14:22.019
+[GL Mentor] Shubham Sharma: as professor might have covered this also, that a very good 1st model to start with for any problem is linear regression, even if it's even if the relationships are nonlinear, because that helps us give a lot of interpretation about the data set and get a lot of information about, you know, like, what are the important relationships between the predictors and the target variable, and which features are significant and things like that.
+
+536
+02:14:22.020 --> 02:14:35.969
+[GL Mentor] Shubham Sharma: There are some diagnostic tests that are also done to measure the viability of the linear regression model like, you will look at the distribution of residuals, and see how close they are to a normal distribution.
+
+537
+02:14:36.010 --> 02:14:44.829
+[GL Mentor] Shubham Sharma: or you would check for presence of heteroscadacity in the model which you can do by doing certain tests.
+
+538
+02:14:45.120 --> 02:14:56.459
+[GL Mentor] Shubham Sharma: and I think this would be discussed. This will be there in the Pre. Reads as well. So there are 6 major assumptions in leader regression that you want to check. If those are satisfied or not.
+
+539
+02:14:56.630 --> 02:14:59.029
+[GL Mentor] Shubham Sharma: and if they are satisfied.
+
+540
+02:14:59.180 --> 02:15:13.479
+[GL Mentor] Shubham Sharma: then a linear degradation is a perfect model. But if not, then you would have less confidence on the outputs, on the relationships and the predictions that the model is giving. But yes, you can get very useful interpretations out of the model.
+
+541
+02:15:19.090 --> 02:15:27.530
+Moderator - Ankit Agrawal: maybe is asking when we did the regression and calculated R. Square in Python. Do we have to check the null hypothesis.
+
+542
+02:15:31.250 --> 02:15:38.019
+[GL Mentor] Shubham Sharma: No. So there is. So in when you implement a linear regression model in Python, you just train a model on the data.
+
+543
+02:15:38.150 --> 02:16:03.649
+[GL Mentor] Shubham Sharma: and it would give you the coefficient values for all the features. It would give you. The R. Squared value and all the metrics that's there for a decression model and the P. Values and the confidence intervals. It will give you everything. And then, based on that, you can check which features actually have a relationship or not. For example, the features for which the P. Value comes out to be less than 0 point 0 5,
+
+544
+02:16:03.830 --> 02:16:23.780
+[GL Mentor] Shubham Sharma: those features would end up being significant, and for those features where where P values more than point 0 5 for those features. In the confidence interval will also have 0. So that means the confidence interval will be something negative to something positive. So that means those features are not significant.
+
+545
+02:16:24.690 --> 02:16:26.330
+[GL Mentor] Shubham Sharma: So that's how you would interpret it.
+
+546
+02:16:27.880 --> 02:16:44.909
+Moderator - Ankit Agrawal: Yeah, I I. And just to maybe like, understand the question a little bit better. R. Squared has nothing to do with the null hypothesis, right? R. Square is basically suggesting how much of the variance in the original data is represented in our model that we have built
+
+547
+02:16:44.980 --> 02:17:04.439
+Moderator - Ankit Agrawal: right? But the null value or the null hypothesis that we are testing is for each parameter right, each variable or each feature of our data set. So R. Squared does not directly like calculating. R. Squared in python, has no direct influence on the null. Hypothesis itself.
+
+548
+02:17:04.870 --> 02:17:09.639
+Moderator - Ankit Agrawal: Right? The null hypothesis will run on each feature or variable.
+
+549
+02:17:10.607 --> 02:17:21.450
+Moderator - Ankit Agrawal: Oliver is asking, How do you recommend presenting results that have a strong confidence are correct, however, are counter to common sense and industry. Best practices.
+
+550
+02:17:26.499 --> 02:17:30.225
+[GL Mentor] Shubham Sharma: Yeah, that can happen sometimes. And when this happens
+
+551
+02:17:31.269 --> 02:17:48.179
+[GL Mentor] Shubham Sharma: you know you would be a bit skeptical, you for I mean at first, st and then what I would do is maybe go back, and 1st of all recheck if all the everything is in line, and there is no bug, or you know we are not missing something.
+
+552
+02:17:48.369 --> 02:18:14.139
+[GL Mentor] Shubham Sharma: and if all of that is fine, then of course I mean, this is this is some new counterintuitive insight that you have been able to extract out from the analysis which you can definitely present. But at the same time you would also want to do some more trials, or you know, there are randomized, controlled trials that you can also do to further validate the results that you're getting, maybe to maybe collect some more data and
+
+553
+02:18:14.369 --> 02:18:35.449
+[GL Mentor] Shubham Sharma: conduct Rcts on different samples of data to further validate it. But yeah, to answer it. How do you present it? I mean, you can support the claim or the inference that you're getting by, you know, adding more tests. And you know something like Rcts or Ab testing to support that particular claim, or the result that you're getting.
+
+554
+02:18:39.664 --> 02:19:05.079
+Moderator - Ankit Agrawal: Just so, maybe quick comment. I think, Professor also mentioned that the the insights that you derive are dependent on the data that you are collecting right. So if your insights are very counterintuitive to common sense and industry practices like, if your domain expert says that these insights are wrong, maybe check your data again. There could be something wrong going on with your data. Maybe the data you are collecting might be wrong, right?
+
+555
+02:19:05.442 --> 02:19:12.640
+Moderator - Ankit Agrawal: So you might want to check. Check your data engineering pipeline and make sure that your data collection process is correct.
+
+556
+02:19:13.361 --> 02:19:23.310
+Moderator - Ankit Agrawal: But yeah, I mean other than that. Yes, you can end up reaching some conclusions as Shubham has mentioned, and it does tend to happen fairly common in practice.
+
+557
+02:19:23.974 --> 02:19:33.320
+Prof. John Tsitsiklis: Liz is asking, how do we interpret Rss divided by Tss in the percentage of data not explained by the Ols model.
+
+558
+02:19:35.719 --> 02:19:45.389
+[GL Mentor] Shubham Sharma: Okay, so tss is total sum of squares, which is basically y minus YB, so you're just taking the difference from the mean value.
+
+559
+02:19:45.509 --> 02:20:01.939
+[GL Mentor] Shubham Sharma: So you can ask this question that what's the most naive model that we can build? Let's say we don't know anything about machine learning. And someone asks you, what's the price? What's the price of the house that you're willing to sell? Let's say, what's the price that you're willing to sell your
+
+560
+02:20:01.939 --> 02:20:22.689
+[GL Mentor] Shubham Sharma: house for. So you can. Maybe you know, maybe 5 other house prices that have sold in the locality. So you just take the average. And you know, sort of, I mean, tell the ballpark around that average. So average is the most naive model that can be built. So y minus y mean, which is in the part of the formula, for Tss represents the most naive model.
+
+561
+02:20:22.919 --> 02:20:39.649
+[GL Mentor] Shubham Sharma: So Rss. By Tss. Gives me a sense of how much better is the model doing over and above the most native model. So the formula for R squared is one minus rss, divided by Tss. Right? So if
+
+562
+02:20:39.809 --> 02:21:06.069
+[GL Mentor] Shubham Sharma: let's say, my linear regression model predicts every single observation correctly, you know, up to the last decimal. So in that case my Y hat will be the same as y as my Y, which is the actual target variable, and that means that my rss will be 0, and my r squared will be one. Which means that my model is explaining the
+
+563
+02:21:06.199 --> 02:21:08.049
+[GL Mentor] Shubham Sharma: target variable 100%
+
+564
+02:21:08.369 --> 02:21:18.649
+[GL Mentor] Shubham Sharma: in that way. We can understand that that ratio Rss. By Tss. Is how much variance left unexplained. So one minus Rss. By Tss. Is how much variance is explained.
+
+565
+02:21:25.480 --> 02:21:27.070
+Moderator - Ankit Agrawal: Let's see.
+
+566
+02:21:27.400 --> 02:21:28.370
+Moderator - Ankit Agrawal: Okay.
+
+567
+02:21:29.137 --> 02:21:44.250
+Moderator - Ankit Agrawal: so Professor Christian has a question. Can you please explain the comment on the size of the error on the last slide. Again, that is the error being different for individual data point versus for the entire linear regression.
+
+568
+02:21:45.210 --> 02:21:46.220
+Prof. John Tsitsiklis: Okay.
+
+569
+02:21:48.710 --> 02:21:59.809
+Prof. John Tsitsiklis: okay? So the way we make predictions is, we take X and form the linear combination of the X's, and that's our predicted value.
+
+570
+02:22:00.150 --> 02:22:02.200
+Prof. John Tsitsiklis: The actual value
+
+571
+02:22:02.760 --> 02:22:21.290
+Prof. John Tsitsiklis: is this, which includes some noise having to do with a specific individual. So I had a concrete example, which was that consumption by an individual is 0 point 7 times their income
+
+572
+02:22:22.550 --> 02:22:24.140
+Prof. John Tsitsiklis: plus W.
+
+573
+02:22:24.420 --> 02:22:28.509
+Prof. John Tsitsiklis: When I'm trying to predict for an individual.
+
+574
+02:22:29.000 --> 02:22:43.980
+Prof. John Tsitsiklis: I do my econometrics, using all the data that the government collects or doesn't collect. And maybe I'm estimating that 0 point 7. And I got it wrong. And I got a 0 point 6 8,
+
+575
+02:22:46.750 --> 02:22:56.029
+Prof. John Tsitsiklis: and then an individual shows up and they predict their consumption. It's 0 point 6 8 times their particular income.
+
+576
+02:22:57.760 --> 02:23:07.850
+Prof. John Tsitsiklis: Am I really predicting what this individual is going to consume 2 sources of error. One is I'm using 68 instead of
+
+577
+02:23:08.980 --> 02:23:14.419
+Prof. John Tsitsiklis: point 7, and that's not going to be that huge.
+
+578
+02:23:15.270 --> 02:23:29.230
+Prof. John Tsitsiklis: But it's also that each individual has their own idiosyncratic effect, their W. So I'm going to get a prediction error that's also caused by that W.
+
+579
+02:23:29.410 --> 02:23:53.199
+Prof. John Tsitsiklis: So these 2 are different sources of error. The 1st source of error has a range or a confidence interval which typically will be pretty narrow. It has to do with what is the exact location of my line. Regression gives me a line, but it could also be some other lines, but more or less inside there.
+
+580
+02:23:54.520 --> 02:24:15.270
+Prof. John Tsitsiklis: But then the W. The idiosyncratic error is what causes all those points to be really far away from the line. So, taking into account the variance of the WI get a wider confidence interval which would look something like that.
+
+581
+02:24:16.780 --> 02:24:19.190
+Prof. John Tsitsiklis: So when when
+
+582
+02:24:19.470 --> 02:24:49.290
+Prof. John Tsitsiklis: estimating for specific individuals in order to get a range, typically, it's the idiosyncratic noise that makes it to be a very wide interval. But if you're trying to estimate the mean effect, as it's called, which is the line, then you can be more accurate about the location of the line, and you have a narrower confidence interval. Hope. This answers it.
+
+583
+02:24:52.198 --> 02:25:06.439
+Moderator - Ankit Agrawal: Let's continue with our questions. So Sam is asking so ideally, we would want to continually rerun our test. To ensure our model is accurate and updated, based on the latest data set.
+
+584
+02:25:06.730 --> 02:25:08.050
+Moderator - Ankit Agrawal: Is that correct?
+
+585
+02:25:10.340 --> 02:25:19.849
+[GL Mentor] Shubham Sharma: Yes, definitely. So usually when we are putting models into production, we also monitor it during production to check for
+
+586
+02:25:20.010 --> 02:25:29.129
+[GL Mentor] Shubham Sharma: obvious problems like data drifts. So data drift is something where your data distribution changes as new data is coming in and conditions are changing.
+
+587
+02:25:29.270 --> 02:25:45.360
+[GL Mentor] Shubham Sharma: And because of that, if the data distribution changes. That means the model which is trained on older data will not be able to perform that well on the current data where the distribution has changed a bit. So that's why you would typically set a schedule to retrain the model
+
+588
+02:25:45.814 --> 02:26:00.910
+[GL Mentor] Shubham Sharma: keeping into account, monitoring, keeping into account the performance as well like, how much is the performance that the model is giving in production? And if it sort of dips significantly below a certain threshold that is predecided, then you go ahead and retrain it, using new data.
+
+589
+02:26:04.150 --> 02:26:12.559
+Moderator - Ankit Agrawal: And so Neil asked a question. When do we decide that our model is ready for good predictions?
+
+590
+02:26:14.770 --> 02:26:39.580
+[GL Mentor] Shubham Sharma: Yeah, so that's a business question. Actually, so, 1st of all, you have to understand what your business problem is, and what success means for your business problem. Right? So maybe for some use cases like, let's say, like a marketing use case, we can have a bit. We can have some room for errors, because cost of one error might not be that significant. So we can, let's say, make
+
+591
+02:26:39.720 --> 02:26:42.920
+[GL Mentor] Shubham Sharma: a higher error and still be okay.
+
+592
+02:26:43.040 --> 02:26:57.960
+[GL Mentor] Shubham Sharma: So in that case I would aim for a relatively lower R squared value or a bit of a higher Rms is also okay with me. So this is the exact number. You know, you have to sort of decide an exact range. What range
+a linear regression simple formulae "target_variable = intercept + constant * feature_variable" - in the equation which parameter is called co-efficient and
+593
+02:26:58.364 --> 02:27:24.680
+[GL Mentor] Shubham Sharma: you are looking for, and then, you know, keep on building the model and refine it, refine it over and over again, unless and until you get that performance, and then you put into, put that into production, keeping in consideration some other aspects as well like interpretability of the model is also one of the important requirements that, again, would depend on the business use case. In some cases we also want a model to be interpretable specifically in the
+
+594
+02:27:24.680 --> 02:27:36.899
+[GL Mentor] Shubham Sharma: financial domain and healthcare domain, where people also want to understand. Why is the model, giving a certain prediction. You don't only want to rely on the prediction, but you also want to be able to explain
+
+595
+02:27:36.900 --> 02:27:47.469
+[GL Mentor] Shubham Sharma: why that prediction is made so that you know, domain experts can also feel comfortable in terms of the models in terms of what the model is actively predicting.
+
+596
+02:27:47.840 --> 02:28:02.969
+[GL Mentor] Shubham Sharma: So yeah, I mean, you look at the interpretability aspect, and you look at what is the cost of error? For from the perspective of that particular business problem, and then accordingly decide the threshold of the performance metrics that you want to achieve before you actually put that into production.
+
+597
+02:28:05.000 --> 02:28:33.950
+Moderator - Ankit Agrawal: Yeah, one of the ways for me, like, personally, when I think about data science in general, I look at what the existing solution looks like like, let's say you're working for a company. They probably have something already built into their system. Right? It? It doesn't have to be a machine learning model. It could be a deterministic model, right? It. They probably have some sort of a solution built in. And then you are tasked to build a model on top of it, right? So you build a model. And if your model does a better job
+
+598
+02:28:33.950 --> 02:28:48.420
+Moderator - Ankit Agrawal: than what existing solutions are present, then it's a good model right, even if your R. Square is low, but that still is a model that is improving on the existing solution. It might still be a good model for you to deploy in production
+
+599
+02:28:48.530 --> 02:29:07.575
+Moderator - Ankit Agrawal: right? So, as Shaba mentioned that this question is more application specific, there is no specific number that decides whether a model is good model for prediction or not. Right? As long as you are making progress as long as whatever business problem you're trying to solve you're doing. You are doing better than the existing solutions
+
+600
+02:29:08.200 --> 02:29:17.610
+Moderator - Ankit Agrawal: within the organization. It's a good model to make prediction going forward right? So that might be one way of thinking about. If a model is ready for predictions or not.
+
+601
+02:29:19.990 --> 02:29:33.269
+Moderator - Ankit Agrawal: Troy is asking a question. If we, if you were to change the linear regression model to use feature maps to capture nonlinear relationships. Would this type of analysis still hold.
+
+602
+02:29:39.680 --> 02:29:40.950
+[GL Mentor] Shubham Sharma: Feature Maps.
+
+603
+02:29:42.310 --> 02:29:49.550
+Moderator - Ankit Agrawal: So basically, they are saying that instead of having the linear regression, if we were to learn a nonlinear regression model.
+
+604
+02:29:49.700 --> 02:29:57.869
+Moderator - Ankit Agrawal: will the analysis like how we have looked at the confidence intervals and P values and wall tests all of this. Will this still be true?
+
+605
+02:29:59.780 --> 02:30:19.159
+[GL Mentor] Shubham Sharma: Yeah, so there are other variants of linear regression model as well. Where we turn the features into nonlinear components. So to incorporate one example, is to incorporate interaction effects. So rather than taking feature X, we can take X squared, or X cubed.
+
+606
+02:30:19.240 --> 02:30:30.469
+[GL Mentor] Shubham Sharma: or even log of X or sine of X. So these are, you know, various nonlinear transformations that we actually do to incorporate the nonlinearity which is there which is there in the
+
+607
+02:30:30.650 --> 02:30:43.629
+[GL Mentor] Shubham Sharma: which is there in the data. So still, the overall equation would be linear. So that's why all these confidence band calculation, the wall test for identifying which coefficients are significant.
+
+608
+02:30:43.880 --> 02:30:51.189
+[GL Mentor] Shubham Sharma: And you know, looking at the looking at the p-value, all of that, all of that would still be would still hold.
+
+609
+02:30:56.190 --> 02:30:57.250
+Moderator - Ankit Agrawal: Professor, maybe.
+
+610
+02:30:57.250 --> 02:30:57.739
+Prof. John Tsitsiklis: That will.
+
+611
+02:30:57.740 --> 02:31:00.100
+Moderator - Ankit Agrawal: Any additional comments.
+
+612
+02:31:00.220 --> 02:31:17.320
+Prof. John Tsitsiklis: Yeah, we'll get into that next time. As long as you're dealing with a linear combination of features the features could be nonlinear functions. These are just new features, and everything that we said today applies.
+
+613
+02:31:17.320 --> 02:31:30.399
+Prof. John Tsitsiklis: If you're using a method where everything is crumbled together in a nonlinear fashion, then one needs a different methodology. So symbolically.
+
+614
+02:31:31.070 --> 02:31:51.290
+Prof. John Tsitsiklis: if you're doing this, some features of the X's combined in a linear way, were still within the framework of today. But if it is some general nonlinear function of the X's and the thetas, as would be the case in neural networks.
+
+615
+02:31:51.290 --> 02:32:04.180
+Prof. John Tsitsiklis: then what we said today does not apply, even though, for those cases as well. People do have methodologies for coming up with confidence intervals and hypothesis tests. But it's more complicated.
+
+616
+02:32:09.110 --> 02:32:16.760
+Moderator - Ankit Agrawal: We have Shubhagato, who asked the question, in which situations do we not run regressions.
+
+617
+02:32:18.210 --> 02:32:18.890
+Prof. John Tsitsiklis: Hmm.
+
+618
+02:32:21.370 --> 02:32:29.100
+[GL Mentor] Shubham Sharma: So, as I said earlier, you know. So it's like this that you're poised, you are. You're given a particular problem that you have to solve using machine learning.
+
+619
+02:32:29.210 --> 02:32:47.100
+[GL Mentor] Shubham Sharma: And I would usually just start with linear regression if it's a business problem where we have to also understand the relationships between various features. But there are also some situations where interpretability is not that important? You are just focused on getting the best possible performing model
+
+620
+02:32:47.170 --> 02:32:59.319
+[GL Mentor] Shubham Sharma: like you know where we are actually building some software for let's say, self driving cars. So there, the decision really matters that the decision has to be accurate
+
+621
+02:32:59.690 --> 02:33:17.890
+[GL Mentor] Shubham Sharma: in terms of it, just takes in all the sensor data and sort of gives a particular decision that a left turn needs to be taken. Or you know. I mean, I'm just trying to sort of oversimplify this. Of course it. It's a lot more complicated than that. But intuitively you can understand wherever wherever
+
+622
+02:33:18.480 --> 02:33:43.309
+[GL Mentor] Shubham Sharma: predictions are really the focus and interpretability is not needed. In such cases, we, we go for more complicated models that we will be learning in the coming weeks. And we don't do linear regression. But any use case where we also have to understand relationships between features which is most of the business use cases there, we definitely start with linear regression unless and until it's a classification problem.
+
+623
+02:33:44.520 --> 02:34:07.759
+Moderator - Ankit Agrawal: Yeah, I was about to say the same thing. I think the question was more about, when do we not use regression? So I was, gonna say that when your labels are more, yeah, when your labels are categorical, then you do not use regression in those kind of situations. But you also extended that question to when do you not use linear regression?
+
+624
+02:34:08.233 --> 02:34:14.860
+Moderator - Ankit Agrawal: So thank you for doing that. We have another question from Christian
+
+625
+02:34:15.458 --> 02:34:24.629
+Moderator - Ankit Agrawal: if we have many features, do we have to consider the effects of multiple testing when assessing the confidence intervals.
+
+626
+02:34:28.630 --> 02:34:31.958
+[GL Mentor] Shubham Sharma: Yeah, I think, Professor, talked about this, that
+
+627
+02:34:33.050 --> 02:34:37.790
+[GL Mentor] Shubham Sharma: it can be extend. The this testing can be extended to multiple testing, because
+
+628
+02:34:39.300 --> 02:35:09.290
+[GL Mentor] Shubham Sharma: that means we get more accurate confidence intervals. So when we are finding a confidence interval, basically, the 95% confidence interval means that if we calculate 100 different confidence intervals. 5 out of those 100 will be wrong, or will not contain the true value. Right? So the more testing we do, the more will be our chances that we will get the correct confidence intervals. We will get the correct results.
+
+629
+02:35:11.700 --> 02:35:12.370
+Prof. John Tsitsiklis: Think.
+
+630
+02:35:13.368 --> 02:35:23.170
+Moderator - Ankit Agrawal: Another question that was asked very early in the lecture was, how would you prompt chat Gpt, after you have uploaded a data set
+
+631
+02:35:25.570 --> 02:35:28.699
+Moderator - Ankit Agrawal: after you upload a data set to chat, Gpt.
+
+632
+02:35:30.440 --> 02:35:55.429
+[GL Mentor] Shubham Sharma: Yeah, nowadays, you can actually do that. I mean, you can try that out. You can simply ask, build a linear regression model keeping Y as the target variable, and x 1 through x 10. As the independent, variable. Build a linear regression model. Give me the R squared value and the statistical summary of the overall analysis, and it would be able to. I'm pretty sure you will be able to get accurate outputs. There.
+
+633
+02:35:57.930 --> 02:35:59.200
+Moderator - Ankit Agrawal: Yeah,
+
+634
+02:36:01.370 --> 02:36:26.360
+Moderator - Ankit Agrawal: I am not fully sure about how Chat Gpt would work on this. I have never actually used Chat Gpt in that way like uploading a data and just following up with it. But yeah, I mean, as Shubham said, maybe try it out and let us know how it turned out for you. We. We are curious to know what, what, how that would work out as well.
+
+635
+02:36:26.992 --> 02:36:36.289
+Moderator - Ankit Agrawal: And we'll take one final question which is from vanita. Can you please explain covariance in the context of linear regression? Again.
+
+636
+02:36:38.570 --> 02:36:39.410
+Prof. John Tsitsiklis: Hmm.
+
+637
+02:36:41.790 --> 02:36:45.560
+Moderator - Ankit Agrawal: So maybe Professor can quickly add a comment on it. Yes.
+
+638
+02:36:46.990 --> 02:36:53.570
+Prof. John Tsitsiklis: Okay? The 1st question would be, what is covariance?
+
+639
+02:36:54.190 --> 02:37:00.309
+Prof. John Tsitsiklis: If you have 2 random variables that have 0 mean
+
+640
+02:37:04.250 --> 02:37:11.389
+Prof. John Tsitsiklis: the covariance of the 2 is just expected value of XY.
+
+641
+02:37:12.420 --> 02:37:27.430
+Prof. John Tsitsiklis: If they have 0. If the means are non-zero, then you subtract the means, and you do the same thing. It turns out that the covariance in general is the correlation coefficients, times the
+
+642
+02:37:27.710 --> 02:37:53.960
+Prof. John Tsitsiklis: standard deviations of each one. So the covariance is the same thing as the correlation in case you have an intuitive understanding of correlation, coefficient but scaled so that it's in the inappropriate units. So now that we know that what covariance is we can look at the covariances of the different estimates.
+
+643
+02:37:55.310 --> 02:38:19.679
+Prof. John Tsitsiklis: So we said that the estimates are themselves random. Sometimes Theta hat one will be on the high side, and maybe those random errors in your estimation tend to go together. When I, when one coefficient, goes high, maybe the other coefficient, goes high and all that. And so this covariance
+
+644
+02:38:19.870 --> 02:38:46.929
+Prof. John Tsitsiklis: measures that the correlation between the errors essentially of the different components. And we take those covariances, and we build the metrics for those for the different I's and J's. Now the diagonal entries, the covariance of a random variable with itself is just the variance, and that gives us the standard errors. So that's all. The
+
+645
+02:38:48.110 --> 02:39:08.260
+Prof. John Tsitsiklis: that's all. The story of what we've got are the covariances themselves useful, or do we only care about the diagonal entries which is the variances. Well, to calculate certain things, the covariances will be needed. But we will not be doing that kind of stuff
+
+646
+02:39:08.260 --> 02:39:20.150
+Prof. John Tsitsiklis: in this week, so you don't need it for this week. Actually, I'm doubtful you would ever need it, because but the software sometimes uses it
+
+647
+02:39:20.580 --> 02:39:28.399
+Prof. John Tsitsiklis: so calculations that are done by the software. They do use the entries of the covariance metrics.
+
+648
+02:39:28.950 --> 02:39:32.060
+Prof. John Tsitsiklis: but you wouldn't have to know about it.
+
+649
+02:39:33.210 --> 02:39:33.760
+Moderator - Ankit Agrawal: Yeah.
+
+650
+02:39:33.760 --> 02:39:38.810
+Prof. John Tsitsiklis: But I find covariance using the word correlation.
+
+651
+02:39:39.080 --> 02:39:41.380
+Prof. John Tsitsiklis: But now
+
+652
+02:39:42.540 --> 02:39:59.600
+Prof. John Tsitsiklis: But I assume that correlation of 2 random variables is a concept that everyone is comfortable with. But I see a question is the correlation matrix the same as the dispersion matrix. Do you have an answer for that?
+
+653
+02:39:59.600 --> 02:40:23.820
+Moderator - Ankit Agrawal: Yeah, they are used interchangeably in some ways. But dispersion matrix is slightly more different. Like, I mean, it can act as a covariance matrix, it can act as a correlation matrix. The term dispersion matrix is more like a broader term. To describe multivariate statistical properties of the data. Covariance is like we are looking at the standard deviations specifically.
+
+654
+02:40:23.820 --> 02:40:32.559
+Moderator - Ankit Agrawal: But but dispersion matrix is a more elaborate term. In in multivariate statistic. At least, that's my understanding of the dispersion matrix
+
+655
+02:40:34.724 --> 02:40:37.869
+Moderator - Ankit Agrawal: Shubham, do you have a comment, maybe, on that question.
+
+656
+02:40:39.250 --> 02:40:46.620
+[GL Mentor] Shubham Sharma: Yeah, what I have seen is, I mean, this version, matrix is mostly used interchangeably with covariance matrix.
+
+657
+02:40:46.650 --> 02:41:10.740
+[GL Mentor] Shubham Sharma: So if I go by that, then, as we have discussed earlier, also, the relationship between correlation and covariance is that correlation is the standardized version of the covariance values. So basically you divide the product of the covariances by the standard deviations of those variables. And then you get correlation. So correlation doesn't have any unit.
+
+658
+02:41:10.940 --> 02:41:14.270
+[GL Mentor] Shubham Sharma: Covariance will have a unit. That's the main difference.
+
+659
+02:41:15.150 --> 02:41:24.970
+Moderator - Ankit Agrawal: Yeah, yeah, and dispersion matrix can be either or right, like, I mean, it can. The same term can be used to define a correlation matrix or a covariance matrix. So
+
+660
+02:41:26.130 --> 02:41:47.509
+Moderator - Ankit Agrawal: okay, so I think we will stop over here we are out of time. So thank you so much, Shubham for answering all the questions there, and thank you, Professor, for the wonderful lecture, and I'll see both of you on Wednesday, when we continue our discussion on linear regression and dive a little bit deeper into talking about non
+
+661
+02:41:47.903 --> 02:41:59.700
+Moderator - Ankit Agrawal: like polynomial regressions. And what happens when our features are not linear necessarily. And how do we look at covariance matrices? How do we do performance assessment on such algorithms?
+
+662
+02:41:59.760 --> 02:42:03.060
+Moderator - Ankit Agrawal: So thank you. And I'll see you see, it.
+
+663
+02:42:03.500 --> 02:42:04.110
+Prof. John Tsitsiklis: You.
+
+664
+02:42:04.110 --> 02:42:06.770
+[GL Mentor] Shubham Sharma: Thank you. Thank you. Ankit. Bye-bye. Thanks a lot.
+
+665
+02:42:06.770 --> 02:42:07.470
+Moderator - Ankit Agrawal: Bye.
+
+666
+02:42:08.120 --> 02:42:08.680
+[GL Mentor] Shubham Sharma: Go ahead!
+
