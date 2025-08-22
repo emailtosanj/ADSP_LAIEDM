@@ -1,0 +1,14 @@
+Payment Systems & Architecture:
+Core Technical Skills: Possesses hands-on experience in Core Java 21, Multithreading, Concurrency, Spring Boot, Python, Pandas, Shell Scripting, and SQL.
+
+Instrumental in designing a Reference data platform with a Gemfire cache to enhance the performance and scalability of payments microservices (JP Morgan Wallet) at JPMorgan Chase & Co.
+
+Card Industry Experience: Have more than 5 years of experience in Cards industry involving various business functions,its application design, development and support.
+
+Technical Certifications: AWS Cloud Quest Solutions Architect, AWS Data Engineer, Hashicorp Terraform Certified, and Certified Kubernetes Application Developer (CKAD).
+
+Hackathon Achievement: Won third prize in the 2024 APAC J.P. Morgan Hackathon for developing a regulatory knowledge expert based on LLM OpenAI GPT3.5 (Langchain).
+
+Data Analytics: Hands on experience in Exploratory Data Analysis & Visualization and predictive analytics involving AI - Practical Data Science, Machine Learning and Deep Learning.
+
+Risk and Regulation: GARP certified with an International Certificate in Banking Risk and Regulation, and has functional knowledge in market price control for various financial instruments.

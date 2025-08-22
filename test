@@ -1,0 +1,9 @@
+
+Failed to save notebook to https://github.com/emailtosanj/ADSP_LAIEDM/blob/development/adsp_laiedm/elective_projects/potential_customers_prediction/
+CustomError: Failed to save notebook to https://github.com/emailtosanj/ADSP_LAIEDM/blob/development/adsp_laiedm/elective_projects/potential_customers_prediction/
+    at new Zgb (https://ssl.gstatic.com/colaboratory-static/common/b965015e1a45391fe22bf7c5be195a20/external_binary_l10n__en_gb.js:2646:19)
+    at qa.program_ (https://ssl.gstatic.com/colaboratory-static/common/b965015e1a45391fe22bf7c5be195a20/external_binary_l10n__en_gb.js:2654:475)
+    at sa (https://ssl.gstatic.com/colaboratory-static/common/b965015e1a45391fe22bf7c5be195a20/external_binary_l10n__en_gb.js:17:57)
+    at qa.throw_ (https://ssl.gstatic.com/colaboratory-static/common/b965015e1a45391fe22bf7c5be195a20/external_binary_l10n__en_gb.js:16:202)
+    at qaa.throw (https://ssl.gstatic.com/colaboratory-static/common/b965015e1a45391fe22bf7c5be195a20/external_binary_l10n__en_gb.js:18:90)
+    at c (https://ssl.gstatic.com/colaboratory-static/common/b965015e1a45391fe22bf7c5be195a20/external_binary_l10n__en_gb.js:18:345)

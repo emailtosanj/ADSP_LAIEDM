@@ -1,0 +1,61 @@
+####
+#  All short courses DeepLearning.ai can be done quickly.
+#Licenses & certifications
+#DeepLearning.AI logo
+#Building Applications with Vector Databases
+#Building Applications with Vector Databases
+#DeepLearning.AIDeepLearning.AI
+#Issued Feb 2024Issued Feb 2024
+#DeepLearning.AI logo
+#Building Systems with the ChatGPT API
+#Building Systems with the ChatGPT API
+#DeepLearning.AIDeepLearning.AI
+#Issued Feb 2024Issued Feb 2024
+#DeepLearning.AI logo
+#Building and Evaluating Advanced RAG
+#Building and Evaluating Advanced RAG
+#DeepLearning.AIDeepLearning.AI
+#Issued Feb 2024Issued Feb 2024
+#DeepLearning.AI logo
+#Finetuning Large Language Models
+#Finetuning Large Language Models
+#DeepLearning.AIDeepLearning.AI
+#Issued Feb 2024Issued Feb 2024
+#DeepLearning.AI logo
+#Functions, Tools and Agents with LangChain
+#Functions, Tools and Agents with LangChain
+#DeepLearning.AIDeepLearning.AI
+#Issued Feb 2024Issued Feb 2024
+#Amazon Web Services (AWS) logo
+#Generative AI Learning Plan for Developers
+#Generative AI Learning Plan for Developers
+Amazon Web Services (AWS)Amazon Web Services (AWS)
+Issued Feb 2024Issued Feb 2024
+DeepLearning.AI logo
+LangChain Chat with Your Data
+LangChain Chat with Your Data
+DeepLearning.AIDeepLearning.AI
+Issued Feb 2024Issued Feb 2024
+DeepLearning.AI logo
+LangChain for LLM Application Development
+LangChain for LLM Application Development
+DeepLearning.AIDeepLearning.AI
+Issued Feb 2024Issued Feb 2024
+DeepLearning.AI logo
+LLMOps
+LLMOps
+DeepLearning.AIDeepLearning.AI
+Issued Jan 2024Issued Jan 2024
+Microsoft logo
+Develop Generative AI Solutions with Azure OpenAI Service
+Develop Generative AI Solutions with Azure OpenAI Service
+MicrosoftMicrosoft
+Issued Dec 2023Issued Dec 2023
+DeepLearning.AI logo
+ChatGPT Prompt Engineering for Developers
+ChatGPT Prompt Engineering for Developers
+DeepLearning.AIDeepLearning.AI
+
+Generative AI for Developers
+GoogleGoogle
+

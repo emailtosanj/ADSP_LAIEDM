@@ -1,0 +1,4 @@
+6.Thisishowitwilllookonceit'suploaded.
+7.NowusethefollowingcommandandrunintoaCodecelltoconvertthisnotebooktohtml
+
+!jupyternbconvert--tohtml'ProjectNotebook.ipynb'
